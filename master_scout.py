@@ -53,7 +53,7 @@ def evaluate_location(lat, lon, pdf_url):
 
     # 4. Planning
     p_hunter = PolicyHunter()
-    pdf_path = "/root/off-grid-property-scout/temp_plan.pdf"
+    pdf_path = "temp_plan.pdf"
     p_hunter.download_pdf(pdf_url, pdf_path)
     doc_text = p_hunter.extract_text(pdf_path)
     p_score, findings = p_hunter.score_document(doc_text)
