@@ -3,3 +3,5 @@ uvicorn==0.24.0
 pydantic==2.5.2
 requests==2.31.0
 beautifulsoup4==4.12.2
+pyproj==3.6.1
+PyPDF2==3.0.1
