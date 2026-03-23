@@ -1,5 +1,5 @@
 // Off-Grid Scout - Popup Logic
-const API_BASE = 'https://off-grid-api.onrender.com'; // TODO: Update with your Render URL
+const API_BASE = 'https://off-grid-api-1.onrender.com'; // TODO: Update with your Render URL
 
 // DOM Elements
 const setupScreen = document.getElementById('setup-screen');

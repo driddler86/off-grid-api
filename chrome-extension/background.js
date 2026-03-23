@@ -1,7 +1,7 @@
 // Off-Grid Scout - Background Service Worker
 // Handles extension lifecycle events and badge updates
 
-const API_BASE = 'https://off-grid-api.onrender.com'; // TODO: Update with your Render URL
+const API_BASE = 'https://off-grid-api-1.onrender.com'; // TODO: Update with your Render URL
 
 // Supported domains for badge indicator
 const SUPPORTED_DOMAINS = [
