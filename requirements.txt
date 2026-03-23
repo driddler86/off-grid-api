@@ -6,3 +6,4 @@ beautifulsoup4==4.12.2
 pyproj==3.6.1
 pypdf==4.0.1
 python-dotenv==1.0.0
+stripe

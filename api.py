@@ -206,6 +206,35 @@ def send_email(data: EmailData):
             detail=f"Failed to send email: {str(e)}"
         )
 
+# --- Stripe payment endpoints ---
+from stripe_integration import create_checkout_session, handle_webhook
+from fastapi import Request
+
+class CheckoutData(BaseModel):
+    plan: str = Field(..., pattern="^(scout|pioneer|lifetime)$")
+    email: str = Field(default=None, max_length=320)
+
+@app.post("/checkout")
+def create_checkout(data: CheckoutData):
+    try:
+        result = create_checkout_session(data.plan, data.email)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Checkout error: {e}")
+        raise HTTPException(status_code=500, detail="Payment setup failed")
+
+@app.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    sig = request.headers.get("stripe-signature", "")
+    try:
+        result = handle_webhook(payload, sig)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 # --- Waitlist endpoint ---
 from waitlist import save_to_waitlist, get_waitlist_count
 

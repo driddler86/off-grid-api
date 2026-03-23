@@ -230,7 +230,7 @@
                     <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Email dossier reports</li>
                     <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Ghost App detection</li>
                 </ul>
-                <a href="#waitlist" class="block w-full bg-brand-600 hover:bg-brand-500 py-3 rounded-xl font-bold text-center transition shadow-lg shadow-brand-600/25">Get Scout</a>
+                <button onclick="checkout('scout')" class="block w-full bg-brand-600 hover:bg-brand-500 py-3 rounded-xl font-bold text-center transition shadow-lg shadow-brand-600/25 cursor-pointer">Get Scout</button>
             </div>
             <!-- Pioneer Tier -->
             <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-8">
@@ -246,7 +246,7 @@
                     <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Priority API access</li>
                     <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> CapEx financial comparison</li>
                 </ul>
-                <a href="#waitlist" class="block w-full border border-white/20 hover:border-white/40 py-3 rounded-xl font-semibold text-center transition">Get Pioneer</a>
+                <button onclick="checkout('pioneer')" class="block w-full border border-white/20 hover:border-white/40 py-3 rounded-xl font-semibold text-center transition cursor-pointer">Get Pioneer</button>
             </div>
         </div>
         <!-- Lifetime Deal Banner -->
@@ -394,6 +394,16 @@
             form.classList.add('hidden');
             success.classList.remove('hidden');
         });
+    }
+
+    // Checkout function
+    async function checkout(plan) {
+        try {
+            const res = await fetch("/checkout", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({plan})});
+            const data = await res.json();
+            if(data.checkout_url) window.location.href = data.checkout_url;
+            else alert("Payment not configured yet. Join the waitlist!");
+        } catch(e) { alert("Payment not available yet. Join the waitlist!"); }
     }
 
     // Navbar scroll effect
