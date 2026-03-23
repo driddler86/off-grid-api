@@ -6,3 +6,4 @@ venv/
 temp_plan.pdf
 .DS_Store
 waitlist.json
+users.json

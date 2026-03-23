@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional
@@ -122,8 +122,19 @@ def health_check():
 
 # --- Issue #1, #2: Fixed /scan with dynamic coords + error handling ---
 @app.post("/scan")
-def scan_property(data: PropertyData):
+def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
     try:
+        # Check API key if provided (free scans allowed without key for demo)
+        user_tier = "free"
+        if x_api_key:
+            limit_info = check_rate_limit(x_api_key)
+            if not limit_info["allowed"]:
+                raise HTTPException(
+                    status_code=429,
+                    detail=limit_info["reason"]
+                )
+            user_tier = limit_info.get("tier", "free")
+
         # Issue #1: Use provided coordinates or geocode from title
         lat, lon = data.lat, data.lon
 
@@ -148,7 +159,20 @@ def scan_property(data: PropertyData):
         logger.info(f"Scanning property at ({lat}, {lon}): {data.title}")
 
         dossier = scanner.generate_dossier(data.title, "TBD", lat, lon, desc)
-        return {"status": "success", "dossier": dossier}
+
+        # Record scan usage if API key provided
+        if x_api_key:
+            record_scan(x_api_key)
+            features = TIER_FEATURES.get(user_tier, TIER_FEATURES["free"])
+        else:
+            features = TIER_FEATURES["free"]
+
+        return {
+            "status": "success",
+            "dossier": dossier,
+            "tier": user_tier,
+            "features": features,
+        }
 
     except HTTPException:
         raise  # Re-raise HTTP exceptions as-is
@@ -231,12 +255,77 @@ async def stripe_webhook(request: Request):
     sig = request.headers.get("stripe-signature", "")
     try:
         result = handle_webhook(payload, sig)
+        # Auto-create/upgrade user account on successful payment
+        if result.get("event_type") == "checkout.session.completed":
+            email = result.get("customer_email")
+            plan = result.get("plan", "scout")
+            stripe_id = result.get("customer_id")
+            if email:
+                user_result = create_user(
+                    email=email,
+                    stripe_customer_id=stripe_id,
+                    tier=plan,
+                )
+                logger.info(f"User account created/upgraded: {email} -> {plan}")
         return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
+# --- Auth endpoints ---
+class RegisterData(BaseModel):
+    email: str = Field(..., max_length=320)
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, v):
+        if "@" not in v or "." not in v:
+            raise ValueError("Invalid email address")
+        return v
+
+@app.post("/auth/register")
+def register_user(data: RegisterData):
+    """Register for a free account and get an API key."""
+    try:
+        result = create_user(email=data.email, tier="free")
+        return {
+            "status": "success",
+            "api_key": result["api_key"],
+            "tier": result["tier"],
+            "message": "Save your API key - it won't be shown again!"
+                       + (" (Existing account - new key issued)" if result["existing"] else ""),
+        }
+    except Exception as e:
+        logger.error(f"Registration failed: {e}")
+        raise HTTPException(status_code=500, detail="Registration failed")
+
+
+@app.get("/auth/verify")
+def verify_key(x_api_key: str = Header(..., alias="X-API-Key")):
+    """Verify an API key and return account info."""
+    stats = get_user_stats(x_api_key)
+    if not stats:
+        raise HTTPException(status_code=401, detail="Invalid API key")
+    return {"status": "success", **stats}
+
+
+@app.get("/auth/usage")
+def get_usage(x_api_key: str = Header(..., alias="X-API-Key")):
+    """Get current usage stats for rate limit display."""
+    limit_check = check_rate_limit(x_api_key)
+    if not limit_check["allowed"] and limit_check["remaining"] == 0 and limit_check["limit"] == 0:
+        raise HTTPException(status_code=401, detail="Invalid API key")
+    return limit_check
+
 # --- Waitlist endpoint ---
 from waitlist import save_to_waitlist, get_waitlist_count
+# --- Auth system ---
+from auth import (
+    create_user, validate_api_key, check_rate_limit,
+    record_scan, get_user_stats, TIER_FEATURES
+)
+from fastapi import Header
+
 
 class WaitlistData(BaseModel):
     email: str = Field(..., max_length=320)
