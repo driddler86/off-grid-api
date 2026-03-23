@@ -1,5 +1,8 @@
 import requests
 import json
+import logging
+logger = logging.getLogger("off-grid-api.history_hunter")
+
 
 class HistoryHunter:
     def __init__(self):

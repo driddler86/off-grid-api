@@ -1,4 +1,8 @@
 import requests
+from cache import cached
+import logging
+logger = logging.getLogger("off-grid-api.energy_hunter")
+
 
 class EnergyHunter:
     def __init__(self):
@@ -16,7 +20,7 @@ class EnergyHunter:
             wind = data['properties']['parameter']['WS50M']['ANN']
             return {"solar_kwh_m2_day": solar, "wind_m_s": wind, "source": "NASA POWER"}
         except Exception as e:
-            print(f"NASA POWER Error: {e}")
+            logger.info(f"NASA POWER Error: {e}")
             return None
 
     def get_open_meteo(self, lat, lon):
@@ -40,16 +44,17 @@ class EnergyHunter:
 
             return {"solar_kwh_m2_day": round(avg_solar_kwh, 2), "wind_m_s": round(avg_wind, 2), "source": "Open-Meteo"}
         except Exception as e:
-            print(f"Open-Meteo Error: {e}")
+            logger.info(f"Open-Meteo Error: {e}")
             return None
 
+    @cached("energy")
     def get_energy_score_data(self, lat, lon):
-        print(f"Fetching energy data for coordinates: {lat}, {lon}...")
+        logger.info(f"Fetching energy data for coordinates: {lat}, {lon}...")
         nasa_data = self.get_nasa_power(lat, lon)
         om_data = self.get_open_meteo(lat, lon)
 
-        print(f"NASA Data: {nasa_data}")
-        print(f"Open-Meteo Data: {om_data}")
+        logger.info(f"NASA Data: {nasa_data}")
+        logger.info(f"Open-Meteo Data: {om_data}")
 
         # Combine and average if both succeed for maximum reliability
         if nasa_data and om_data:

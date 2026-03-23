@@ -1,6 +1,10 @@
 import requests
+from cache import cached
 import math
 import json
+import logging
+logger = logging.getLogger("off-grid-api.os_land_rover")
+
 
 class OSLandRover:
     def __init__(self):
@@ -16,11 +20,11 @@ class OSLandRover:
             data = response.json()
             return [res['elevation'] for res in data['results']]
         except Exception as e:
-            print(f"Elevation API Error: {e}")
+            logger.info(f"Elevation API Error: {e}")
             return [None] * len(coords)
 
     def analyze_terrain(self, lat, lon):
-        print("Analyzing terrain (Elevation, Slope, and Aspect)...")
+        logger.info("Analyzing terrain (Elevation, Slope, and Aspect)...")
         delta = 0.001
         
         coords = [
@@ -71,7 +75,7 @@ class OSLandRover:
         }
 
     def check_access_rights(self, lat, lon, radius=500):
-        print(f"Checking for public roads within {radius}m...")
+        logger.info(f"Checking for public roads within {radius}m...")
         query = f"[out:json];way['highway'](around:{radius},{lat},{lon});out center;"
         try:
             response = requests.post(self.overpass_url, data={'data': query}, timeout=10)
@@ -96,11 +100,12 @@ class OSLandRover:
                 "road_count_in_radius": len(roads)
             }
         except Exception as e:
-            print(f"Overpass API Error: {e}")
+            logger.info(f"Overpass API Error: {e}")
             return {"nearest_road_m": "Unknown", "has_access": False}
 
+    @cached("terrain")
     def scout_location(self, lat, lon):
-        print(f"\n--- OS Land-Rover Scouting: {lat}, {lon} ---")
+        logger.info(f"\n--- OS Land-Rover Scouting: {lat}, {lon} ---")
         terrain = self.analyze_terrain(lat, lon)
         access = self.check_access_rights(lat, lon)
         

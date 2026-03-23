@@ -1,13 +1,16 @@
 import json
 import time
 from unified_scout import UnifiedScout
+import logging
+logger = logging.getLogger("off-grid-api.live_scanner")
+
 
 class LiveScanner:
     def __init__(self):
         self.scout = UnifiedScout()
 
     def generate_dossier(self, property_name, price, lat, lon, description):
-        print(f"\n🔍 Scanning: {property_name}...")
+        logger.info(f"\n🔍 Scanning: {property_name}...")
         
         # Run the Grand Unification Engine
         report = self.scout.run_full_scout(lat, lon, text_description=description)

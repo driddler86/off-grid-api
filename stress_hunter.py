@@ -1,7 +1,11 @@
 import requests
+from cache import cached
 import json
 import math
 from pyproj import Transformer
+import logging
+logger = logging.getLogger("off-grid-api.stress_hunter")
+
 
 class StressHunter:
     def __init__(self):
@@ -74,6 +78,7 @@ class StressHunter:
         except Exception as e:
             return {"error": str(e), "score_modifier": 0}
 
+    @cached("stress")
     def run_stress_test(self, lat, lon):
         flood_data = self.check_flood_risk(lat, lon)
         grid_data = self.check_grid_distance(lat, lon)

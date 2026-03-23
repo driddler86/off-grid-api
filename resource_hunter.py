@@ -1,6 +1,10 @@
 import requests
+from cache import cached
 import json
 from pyproj import Transformer
+import logging
+logger = logging.getLogger("off-grid-api.resource_hunter")
+
 
 class ResourceHunter:
     def __init__(self):
@@ -28,7 +32,7 @@ class ResourceHunter:
             response.raise_for_status()
             return response.json()
         except Exception as e:
-            print(f"API Error for {url}: {e}")
+            logger.info(f"API Error for {url}: {e}")
             return None
 
     def get_aquifer_data(self, easting, northing):
@@ -55,6 +59,7 @@ class ResourceHunter:
             }
         return {"soil_description": "No data"}
 
+    @cached("resource")
     def get_resource_score_data(self, lat, lon):
         easting, northing = self.transformer.transform(lon, lat)
 

@@ -2,6 +2,9 @@ import json
 from listing_hunter import ListingHunter
 from stress_hunter import StressHunter
 from history_hunter import HistoryHunter
+import logging
+logger = logging.getLogger("off-grid-api.autonomous_scout")
+
 
 class AutonomousScout:
     def __init__(self):
@@ -10,7 +13,7 @@ class AutonomousScout:
         self.history_hunter = HistoryHunter()
 
     def evaluate_plot(self, lat, lon, text_description=None, url=None):
-        print(f"\n[1/3] 🕵️  Running Broad Sweep (Listing Analysis)...")
+        logger.info(f"\n[1/3] 🕵️  Running Broad Sweep (Listing Analysis)...")
         if text_description:
             listing_data = self.listing_hunter.analyze_text(text_description)
         elif url:
@@ -18,10 +21,10 @@ class AutonomousScout:
         else:
             listing_data = {"score": 0, "is_viable": True, "error": "No text or URL provided"}
 
-        print(f"[2/3] 🌊 Running Environmental Stress Test (Flood & Grid)...")
+        logger.info(f"[2/3] 🌊 Running Environmental Stress Test (Flood & Grid)...")
         stress_data = self.stress_hunter.run_stress_test(lat, lon)
 
-        print(f"[3/3] 👻 Hunting for 'Ghost' Planning Applications...")
+        logger.info(f"[3/3] 👻 Hunting for 'Ghost' Planning Applications...")
         history_data = self.history_hunter.search_ghost_applications(lat, lon, radius_m=200)
 
         # Aggregate Scores

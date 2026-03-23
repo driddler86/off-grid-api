@@ -1,7 +1,10 @@
 import os
 import requests
-import PyPDF2
+import pypdf
 import re
+import logging
+logger = logging.getLogger("off-grid-api.policy_hunter")
+
 
 class PolicyHunter:
     def __init__(self):
@@ -16,7 +19,7 @@ class PolicyHunter:
         }
 
     def download_pdf(self, url: str, save_path: str) -> str:
-        print(f"Downloading document from {url}...")
+        logger.info(f"Downloading document from {url}...")
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
         response = requests.get(url, headers=headers)
         response.raise_for_status()
@@ -25,10 +28,10 @@ class PolicyHunter:
         return save_path
 
     def extract_text(self, pdf_path: str) -> str:
-        print(f"Extracting text from {pdf_path}...")
+        logger.info(f"Extracting text from {pdf_path}...")
         text = ""
         with open(pdf_path, 'rb') as file:
-            reader = PyPDF2.PdfReader(file)
+            reader = pypdf.PdfReader(file)
             for page in reader.pages:
                 extracted = page.extract_text()
                 if extracted:
@@ -36,7 +39,7 @@ class PolicyHunter:
         return text.lower()
 
     def score_document(self, text: str) -> tuple:
-        print("Scoring document based on keywords...")
+        logger.info("Scoring document based on keywords...")
         score = 0.0
         findings = {}
 
