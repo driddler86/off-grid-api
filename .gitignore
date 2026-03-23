@@ -8,3 +8,7 @@ temp_plan.pdf
 waitlist.json
 users.json
 offgridscout-v1.0.0.zip
+offgridscout.db
+offgridscout.db-wal
+offgridscout.db-shm
+*.json.bak

@@ -68,6 +68,10 @@ MAX_REQUESTS = int(os.getenv("RATE_LIMIT_MAX", "10"))
 RATE_WINDOW = int(os.getenv("RATE_LIMIT_WINDOW", "60"))
 app.add_middleware(RateLimitMiddleware, max_requests=MAX_REQUESTS, window_seconds=RATE_WINDOW)
 
+# --- Initialize SQLite database ---
+from db import init_db
+init_db()
+
 
 # --- Issue #1 & #5: Updated PropertyData with lat/lon + validation ---
 class PropertyData(BaseModel):
@@ -318,9 +322,9 @@ def get_usage(x_api_key: str = Header(..., alias="X-API-Key")):
     return limit_check
 
 # --- Waitlist endpoint ---
-from waitlist import save_to_waitlist, get_waitlist_count
-# --- Auth system ---
-from auth import (
+# --- Database (replaces auth.py and waitlist.py) ---
+from db import (
+    init_db, save_to_waitlist, get_waitlist_count,
     create_user, validate_api_key, check_rate_limit,
     record_scan, get_user_stats, TIER_FEATURES
 )
