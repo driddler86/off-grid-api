@@ -352,4 +352,22 @@ from fastapi.responses import FileResponse
 def serve_landing():
     return FileResponse("static/index.html")
 
+
+# --- Admin Dashboard ---
+from db import get_dashboard_stats, get_recent_scans
+ADMIN_KEY = os.getenv("ADMIN_KEY", "change-me-in-production")
+
+@app.get("/admin")
+def serve_admin():
+    return FileResponse("static/admin.html")
+
+@app.get("/admin/dashboard")
+def admin_dashboard(x_admin_key: str = Header(None, alias="X-Admin-Key")):
+    if not x_admin_key or x_admin_key != ADMIN_KEY:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return {
+        "stats": get_dashboard_stats(),
+        "recent_scans": get_recent_scans(limit=20)
+    }
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
