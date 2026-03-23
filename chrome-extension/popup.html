@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Off-Grid Scout</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 380px; min-height: 480px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; }
+    .header { background: linear-gradient(135deg, #065f46, #064e3b); padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+    .header h1 { font-size: 15px; color: #fff; }
+    .tier-badge { margin-left: auto; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tier-free { border: 1px solid #fbbf24; color: #fbbf24; }
+    .tier-scout { border: 1px solid #34d399; color: #34d399; }
+    .tier-pioneer { border: 1px solid #a78bfa; color: #a78bfa; }
+    .tier-lifetime { border: 1px solid #f472b6; color: #f472b6; }
+    .section { padding: 14px 16px; border-bottom: 1px solid #1e293b; }
+    .section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 8px; }
+    .intro { font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px; }
+    .input-group { display: flex; gap: 8px; margin-bottom: 8px; }
+    .input-group input { flex: 1; padding: 8px 12px; background: #1e293b; border: 1px solid #334155; border-radius: 6px; color: #e2e8f0; font-size: 13px; outline: none; }
+    .input-group input:focus { border-color: #10b981; }
+    .input-group input::placeholder { color: #475569; }
+    .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #10b981; color: #fff; }
+    .btn-primary:hover { background: #059669; }
+    .btn-primary:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
+    .btn-secondary { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+    .btn-full { width: 100%; }
+    .btn-small { padding: 5px 10px; font-size: 11px; }
+    .register-link { text-align: center; margin-top: 8px; font-size: 12px; color: #64748b; }
+    .register-link a { color: #10b981; text-decoration: none; cursor: pointer; }
+    .status-bar { display: flex; justify-content: space-between; padding: 8px 12px; background: #1e293b; border-radius: 6px; font-size: 12px; }
+    .scans-count { color: #10b981; font-weight: 600; }
+    .progress-bar { width: 100%; height: 4px; background: #334155; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #10b981; border-radius: 2px; transition: width 0.3s; }
+    .site-info { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #1e293b; border-radius: 6px; margin-bottom: 12px; }
+    .site-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .site-dot.supported { background: #10b981; }
+    .site-dot.unsupported { background: #ef4444; }
+    .site-name { font-size: 13px; font-weight: 500; }
+    .site-url { font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+    .score-display { text-align: center; padding: 20px; background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 8px; border: 1px solid #334155; margin-bottom: 12px; }
+    .score-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; }
+    .score-value { font-size: 48px; font-weight: 800; margin: 4px 0; }
+    .score-high { color: #10b981; }
+    .score-mid { color: #fbbf24; }
+    .score-low { color: #ef4444; }
+    .score-subtitle { font-size: 12px; color: #94a3b8; }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .result-card { padding: 10px; background: #1e293b; border-radius: 6px; text-align: center; }
+    .result-card .icon { font-size: 18px; margin-bottom: 4px; }
+    .result-card .label { font-size: 10px; color: #64748b; text-transform: uppercase; }
+    .result-card .value { font-size: 13px; font-weight: 600; margin-top: 2px; }
+    .upgrade-banner { background: linear-gradient(135deg, #7c3aed, #6d28d9); padding: 12px 16px; border-radius: 6px; text-align: center; margin-top: 8px; cursor: pointer; }
+    .upgrade-banner:hover { opacity: 0.9; }
+    .upgrade-banner .text { font-size: 12px; font-weight: 600; color: #fff; }
+    .upgrade-banner .subtext { font-size: 11px; color: #c4b5fd; margin-top: 2px; }
+    .msg { padding: 10px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 8px; }
+    .msg-error { background: #991b1b33; border: 1px solid #991b1b; color: #fca5a5; }
+    .msg-success { background: #065f4633; border: 1px solid #065f46; color: #6ee7b7; }
+    .loading { text-align: center; padding: 24px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid #334155; border-top-color: #10b981; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 13px; color: #94a3b8; }
+    .footer { padding: 10px 16px; text-align: center; font-size: 11px; color: #475569; }
+    .footer a { color: #10b981; text-decoration: none; }
+    .hidden { display: none !important; }
+    .actions-row { display: flex; gap: 8px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <span style="font-size:20px">&#x1f3d5;&#xfe0f;</span>
+    <h1>Off-Grid Scout</h1>
+    <span id="tier-badge" class="tier-badge tier-free">FREE</span>
+  </div>
+
+  <!-- SETUP SCREEN -->
+  <div id="setup-screen" class="section">
+    <p class="intro">Enter your API key to start scanning, or register for a free account.</p>
+    <div class="input-group">
+      <input type="text" id="api-key-input" placeholder="ogs_your_api_key_here">
+      <button class="btn btn-primary" id="save-key-btn">Save</button>
+    </div>
+    <div class="register-link">No account? <a id="register-link">Get a free API key</a></div>
+    <div id="register-form" class="hidden" style="margin-top:12px">
+      <div class="input-group">
+        <input type="email" id="register-email" placeholder="your@email.com">
+        <button class="btn btn-primary" id="register-btn">Register</button>
+      </div>
+    </div>
+    <div id="setup-msg"></div>
+  </div>
+
+  <!-- MAIN SCREEN -->
+  <div id="main-screen" class="hidden">
+    <div class="section">
+      <div class="status-bar">
+        <span>Daily Scans</span>
+        <span class="scans-count" id="scans-count">0 / 3</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Current Page</div>
+      <div class="site-info">
+        <div class="site-dot" id="site-dot"></div>
+        <div>
+          <div class="site-name" id="site-name">Checking...</div>
+          <div class="site-url" id="site-url"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" id="scan-btn" disabled>&#x1f50d; Scan This Property</button>
+    </div>
+
+    <div id="loading-section" class="section hidden">
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Analysing property...<br><small>Checking 7+ data sources</small></div>
+      </div>
+    </div>
+
+    <div id="results-section" class="section hidden">
+      <div class="section-title">Sovereignty Score</div>
+      <div class="score-display">
+        <div class="score-label">Overall Rating</div>
+        <div class="score-value" id="score-value">--</div>
+        <div class="score-subtitle" id="score-verdict"></div>
+      </div>
+      <div class="result-grid">
+        <div class="result-card"><div class="icon">&#x26a1;</div><div class="label">Energy</div><div class="value" id="res-energy">--</div></div>
+        <div class="result-card"><div class="icon">&#x1f4a7;</div><div class="label">Water</div><div class="value" id="res-water">--</div></div>
+        <div class="result-card"><div class="icon">&#x1f30a;</div><div class="label">Flood Risk</div><div class="value" id="res-flood">--</div></div>
+        <div class="result-card"><div class="icon">&#x1f3d7;&#xfe0f;</div><div class="label">Planning</div><div class="value" id="res-planning">--</div></div>
+        <div class="result-card"><div class="icon">&#x1f4f6;</div><div class="label">Grid Dist.</div><div class="value" id="res-grid">--</div></div>
+        <div class="result-card"><div class="icon">&#x2600;&#xfe0f;</div><div class="label">Solar</div><div class="value" id="res-solar">--</div></div>
+      </div>
+      <div class="actions-row">
+        <button class="btn btn-secondary btn-full" id="copy-btn">&#x1f4cb; Copy Report</button>
+        <button class="btn btn-secondary btn-full" id="email-btn">&#x1f4e7; Email Report</button>
+      </div>
+      <div id="upgrade-banner" class="upgrade-banner hidden">
+        <div class="text">&#x1f680; Unlock PDF Export & More Scans</div>
+        <div class="subtext">Upgrade to Scout from &pound;9.99/mo</div>
+      </div>
+    </div>
+
+    <div class="section" style="padding:8px 16px">
+      <button class="btn btn-secondary btn-small" id="logout-btn">&#x1f511; Change API Key</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://offgridscout.co.uk" target="_blank">offgridscout.co.uk</a> &middot; v1.0.0
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
