@@ -205,3 +205,29 @@ def send_email(data: EmailData):
             status_code=500,
             detail=f"Failed to send email: {str(e)}"
         )
+
+# --- Waitlist endpoint ---
+from waitlist import save_to_waitlist, get_waitlist_count
+
+class WaitlistData(BaseModel):
+    email: str = Field(..., max_length=320)
+
+@app.post("/waitlist")
+def join_waitlist(data: WaitlistData):
+    try:
+        result = save_to_waitlist(data.email)
+        result["total_signups"] = get_waitlist_count()
+        return result
+    except Exception as e:
+        logger.error(f"Waitlist error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# --- Serve landing page ---
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+@app.get("/")
+def serve_landing():
+    return FileResponse("static/index.html")
+
+app.mount("/static", StaticFiles(directory="static"), name="static")

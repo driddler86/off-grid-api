@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Off-Grid Scout — AI-Powered Land Evaluation for Off-Grid Living</title>
+    <meta name="description" content="Instantly evaluate any UK land plot for off-grid living potential. Flood risk, energy, water, planning — all analyzed in seconds.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d' },
+                        dark: { 800:'#1a1a2e', 900:'#0f0f1a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg{background:linear-gradient(135deg,#0f0f1a 0%,#1a1a2e 50%,#162416 100%)}
+        .glow{box-shadow:0 0 40px rgba(34,197,94,0.15)}
+        .glow-text{text-shadow:0 0 30px rgba(34,197,94,0.3)}
+        .card-hover{transition:all .3s ease}
+        .card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+        .pulse-dot{animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        .fade-in{animation:fadeIn .8s ease-out}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .hero-pattern{background-image:radial-gradient(circle at 20% 50%,rgba(34,197,94,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(34,197,94,0.05) 0%,transparent 50%)}
+        .score-ring{background:conic-gradient(#22c55e 0deg,#22c55e 270deg,#333 270deg,#333 360deg)}
+        html{scroll-behavior:smooth}
+    </style>
+</head>
+<body class="gradient-bg text-white font-sans antialiased">
+
+<!-- Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-dark-900/80 backdrop-blur-xl border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">&#x1f3d5;&#xfe0f;</span>
+                <span class="text-xl font-bold">Off-Grid <span class="text-brand-400">Scout</span></span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
+                <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How It Works</a>
+                <a href="#pricing" class="text-gray-300 hover:text-white transition">Pricing</a>
+                <a href="#faq" class="text-gray-300 hover:text-white transition">FAQ</a>
+                <a href="#waitlist" class="bg-brand-600 hover:bg-brand-500 px-5 py-2 rounded-lg font-semibold transition">Get Early Access</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-pattern min-h-screen flex items-center pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in">
+                <div class="inline-flex items-center bg-brand-900/30 border border-brand-700/30 rounded-full px-4 py-1.5 mb-6">
+                    <span class="pulse-dot w-2 h-2 bg-brand-400 rounded-full mr-2"></span>
+                    <span class="text-brand-300 text-sm font-medium">Now in Early Access</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6">
+                    Find Your Perfect<span class="text-brand-400 glow-text"> Off-Grid</span> Land in Seconds
+                </h1>
+                <p class="text-xl text-gray-400 mb-8 max-w-lg">
+                    AI-powered Chrome extension that instantly evaluates UK land plots for off-grid living. Flood risk, energy potential, water sources, planning policy — all analyzed while you browse.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                    <a href="#waitlist" class="bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold text-lg text-center transition shadow-lg shadow-brand-600/25">&#x1f680; Get Early Access</a>
+                    <a href="#how-it-works" class="border border-white/20 hover:border-white/40 px-8 py-4 rounded-xl font-semibold text-lg text-center transition">See How It Works</a>
+                </div>
+                <div class="flex items-center space-x-6 text-sm text-gray-500">
+                    <div>&#x2713; Free trial included</div>
+                    <div>&#x2713; No card required</div>
+                    <div>&#x2713; Cancel anytime</div>
+                </div>
+            </div>
+            <!-- Score Mockup -->
+            <div class="fade-in flex justify-center">
+                <div class="bg-dark-800/60 backdrop-blur border border-white/10 rounded-2xl p-8 glow max-w-md w-full">
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-sm text-gray-400">Sovereignty Score</span>
+                        <span class="text-xs bg-brand-900/50 text-brand-300 px-2 py-1 rounded-full">&#x26a1; Live</span>
+                    </div>
+                    <div class="flex items-center justify-center mb-6">
+                        <div class="relative w-32 h-32"><div class="score-ring w-full h-full rounded-full flex items-center justify-center"><div class="bg-dark-900 w-24 h-24 rounded-full flex items-center justify-center"><span class="text-4xl font-black text-brand-400">78</span></div></div></div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f4dc; Planning</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-brand-400 rounded-full" style="width:85%"></div></div><span class="text-sm font-semibold">85%</span></div></div>
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x2600;&#xfe0f; Energy</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-yellow-400 rounded-full" style="width:72%"></div></div><span class="text-sm font-semibold">72%</span></div></div>
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f4a7; Water</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-blue-400 rounded-full" style="width:68%"></div></div><span class="text-sm font-semibold">68%</span></div></div>
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f6e3;&#xfe0f; Terrain</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-orange-400 rounded-full" style="width:90%"></div></div><span class="text-sm font-semibold">90%</span></div></div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/10"><div class="flex items-center text-brand-300"><span class="mr-2">&#x1f47b;</span><span class="text-sm font-semibold">Ghost Application Found — Para 84 Candidate!</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="border-y border-white/5 bg-dark-900/50">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div><div class="text-3xl font-black text-brand-400">7+</div><div class="text-sm text-gray-400 mt-1">UK Data Sources</div></div>
+            <div><div class="text-3xl font-black text-brand-400">30s</div><div class="text-sm text-gray-400 mt-1">Average Scan Time</div></div>
+            <div><div class="text-3xl font-black text-brand-400">&pound;000s</div><div class="text-sm text-gray-400 mt-1">Saved in Research</div></div>
+            <div><div class="text-3xl font-black text-brand-400">Para 84</div><div class="text-sm text-gray-400 mt-1">Ghost App Detection</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">Everything You Need to <span class="text-brand-400">Scout Smart</span></h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">7+ UK data sources analyzed automatically while you browse property listings</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x1f30a;</div>
+                <h3 class="text-lg font-bold mb-2">Flood Risk Analysis</h3>
+                <p class="text-gray-400 text-sm">Real-time checks against the UK Environment Agency flood map. Instantly flags Zone 2 and Zone 3 risks.</p>
+            </div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x26a1;</div>
+                <h3 class="text-lg font-bold mb-2">Grid Distance Check</h3>
+                <p class="text-gray-400 text-sm">Uses OpenStreetMap to calculate proximity to the nearest power line. True off-grid scoring.</p>
+            </div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x2600;&#xfe0f;</div>
+                <h3 class="text-lg font-bold mb-2">Solar &amp; Wind Potential</h3>
+                <p class="text-gray-400 text-sm">NASA POWER satellite data for solar irradiance and wind speed. Terrain-adjusted for slope and aspect.</p>
+            </div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x1f4a7;</div>
+                <h3 class="text-lg font-bold mb-2">Water &amp; Soil Resources</h3>
+                <p class="text-gray-400 text-sm">British Geological Survey data on aquifer productivity and soil type. Know your borehole potential.</p>
+            </div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x1f47b;</div>
+                <h3 class="text-lg font-bold mb-2">Ghost App Detection</h3>
+                <p class="text-gray-400 text-sm">Finds refused planning applications nearby — the secret key to Paragraph 84 development rights.</p>
+            </div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x1f3d4;&#xfe0f;</div>
+                <h3 class="text-lg font-bold mb-2">Terrain &amp; Access</h3>
+                <p class="text-gray-400 text-sm">Elevation, slope, aspect analysis plus road access within 150m. South-facing land gets a boost.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section id="how-it-works" class="py-24 bg-dark-900/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">How It <span class="text-brand-400">Works</span></h2>
+            <p class="text-gray-400 text-lg">Three simple steps to evaluate any UK land plot</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl font-black text-brand-400">1</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Browse Listings</h3>
+                <p class="text-gray-400">Visit any UK land listing on Rightmove, OnTheMarket, or other property sites as you normally would.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl font-black text-brand-400">2</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Click Scout</h3>
+                <p class="text-gray-400">Hit the Off-Grid Scout extension icon. Our AI analyses 7+ data sources in under 30 seconds.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl font-black text-brand-400">3</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Get Your Dossier</h3>
+                <p class="text-gray-400">Receive a full Sovereignty Score with planning analysis, energy potential, water resources, and CapEx estimates.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">Simple, Honest <span class="text-brand-400">Pricing</span></h2>
+            <p class="text-gray-400 text-lg">Start free. Upgrade when you're ready.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- Free Tier -->
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-8">
+                <div class="text-sm text-gray-400 font-semibold uppercase tracking-wider mb-2">Free Trial</div>
+                <div class="flex items-baseline mb-6">
+                    <span class="text-4xl font-black">&pound;0</span>
+                    <span class="text-gray-400 ml-2">forever</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> 3 property scans</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Basic Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Flood risk check</li>
+                    <li class="flex items-center text-sm text-gray-500"><span class="mr-2">&#x2717;</span> Email reports</li>
+                    <li class="flex items-center text-sm text-gray-500"><span class="mr-2">&#x2717;</span> Ghost App detection</li>
+                </ul>
+                <a href="#waitlist" class="block w-full border border-white/20 hover:border-white/40 py-3 rounded-xl font-semibold text-center transition">Start Free</a>
+            </div>
+            <!-- Scout Tier -->
+            <div class="card-hover bg-brand-900/20 border-2 border-brand-500/50 rounded-2xl p-8 relative">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-600 text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
+                <div class="text-sm text-brand-300 font-semibold uppercase tracking-wider mb-2">Scout</div>
+                <div class="flex items-baseline mb-6">
+                    <span class="text-4xl font-black">&pound;9.99</span>
+                    <span class="text-gray-400 ml-2">/month</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> 20 scans per month</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Full Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> All 7+ data sources</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Email dossier reports</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Ghost App detection</li>
+                </ul>
+                <a href="#waitlist" class="block w-full bg-brand-600 hover:bg-brand-500 py-3 rounded-xl font-bold text-center transition shadow-lg shadow-brand-600/25">Get Scout</a>
+            </div>
+            <!-- Pioneer Tier -->
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-8">
+                <div class="text-sm text-gray-400 font-semibold uppercase tracking-wider mb-2">Pioneer</div>
+                <div class="flex items-baseline mb-6">
+                    <span class="text-4xl font-black">&pound;19.99</span>
+                    <span class="text-gray-400 ml-2">/month</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> <strong>Unlimited</strong> scans</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Full Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> All 7+ data sources</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Priority API access</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> CapEx financial comparison</li>
+                </ul>
+                <a href="#waitlist" class="block w-full border border-white/20 hover:border-white/40 py-3 rounded-xl font-semibold text-center transition">Get Pioneer</a>
+            </div>
+        </div>
+        <!-- Lifetime Deal Banner -->
+        <div class="mt-12 max-w-3xl mx-auto bg-gradient-to-r from-brand-900/40 to-brand-800/20 border border-brand-600/30 rounded-2xl p-8 text-center">
+            <div class="text-2xl mb-2">&#x1f525;</div>
+            <h3 class="text-xl font-bold mb-2">Founding Member Lifetime Deal</h3>
+            <p class="text-gray-400 mb-4">First 100 users get <strong class="text-brand-400">&pound;99 one-time</strong> for unlimited everything. Forever.</p>
+            <a href="#waitlist" class="inline-block bg-brand-600 hover:bg-brand-500 px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-brand-600/25">Claim Your Spot</a>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section id="faq" class="py-24 bg-dark-900/50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">Frequently Asked <span class="text-brand-400">Questions</span></h2>
+        </div>
+        <div class="space-y-4">
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    What property sites does it work with?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">Off-Grid Scout works with any UK property listing website including Rightmove, OnTheMarket, Zoopla, LandForSale.co.uk, and more. Simply browse a listing and click the extension icon.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    What is a "Sovereignty Score"?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">The Sovereignty Score (0-100) is our proprietary rating that combines planning policy analysis (40%), energy potential (30%), and water/resource availability (30%). Higher scores mean better off-grid potential. Scores above 70 are considered excellent candidates.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    What is a "Ghost Application"?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">A Ghost Application is a previously refused residential planning application near your target plot. Under Paragraph 84 of the NPPF, these refused applications can actually strengthen your case for alternative rural development. Our AI detects these automatically &mdash; a feature no other tool offers.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    How accurate is the data?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">We pull from official UK government and scientific sources: Environment Agency (flood), NASA POWER (energy), British Geological Survey (water/soil), OpenStreetMap (infrastructure), and PlanIt (planning history). The data is as accurate as the source agencies provide. We always recommend professional surveys before purchase.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    Does it work outside the UK?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">Currently Off-Grid Scout is UK-only, as it relies on UK-specific data sources (Environment Agency, BGS, UK planning system). We're exploring expansion to other countries in the future.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    Can I cancel my subscription?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">Yes, cancel anytime with one click from your dashboard. No lock-in contracts, no cancellation fees. Your access continues until the end of your billing period.</div>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- Waitlist / CTA Section -->
+<section id="waitlist" class="py-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="text-4xl mb-4">&#x1f3d5;&#xfe0f;</div>
+        <h2 class="text-3xl sm:text-4xl font-black mb-4">Ready to Scout <span class="text-brand-400">Smarter</span>?</h2>
+        <p class="text-gray-400 text-lg mb-8">Join the early access list. Be first to get the extension when it launches. Founding members get the lifetime deal.</p>
+        <form id="waitlist-form" class="max-w-md mx-auto">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <input type="email" id="email-input" placeholder="your@email.com" required class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition">
+                <button type="submit" class="bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-brand-600/25 whitespace-nowrap">Join Waitlist</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-3">No spam. Unsubscribe anytime. We respect your privacy.</p>
+        </form>
+        <div id="waitlist-success" class="hidden mt-6 bg-brand-900/30 border border-brand-600/30 rounded-xl p-6">
+            <span class="text-2xl">&#x1f389;</span>
+            <p class="text-brand-300 font-semibold mt-2">You're on the list! We'll notify you when Off-Grid Scout launches.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-white/5 py-12 bg-dark-900/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <span class="text-xl">&#x1f3d5;&#xfe0f;</span>
+                    <span class="text-lg font-bold">Off-Grid <span class="text-brand-400">Scout</span></span>
+                </div>
+                <p class="text-sm text-gray-500">AI-powered land evaluation for off-grid living in the UK.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Product</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#features" class="hover:text-white transition">Features</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition">Pricing</a></li>
+                    <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Legal</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Connect</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="https://github.com/driddler86" class="hover:text-white transition">GitHub</a></li>
+                    <li><a href="mailto:hello@offgridscout.com" class="hover:text-white transition">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-white/5 text-center text-sm text-gray-500">
+            &copy; 2025 Off-Grid Scout. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script>
+    // Mobile menu toggle
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    if (btn && menu) {
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
+    }
+
+    // Waitlist form
+    const form = document.getElementById('waitlist-form');
+    const success = document.getElementById('waitlist-success');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email-input').value;
+            // Call the waitlist API
+            fetch('/waitlist', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})}).then(r=>r.json()).then(d=>console.log('Waitlist:',d)).catch(e=>console.error(e));
+            form.classList.add('hidden');
+            success.classList.remove('hidden');
+        });
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('nav');
+        if (window.scrollY > 50) {
+            nav.classList.add('shadow-xl');
+        } else {
+            nav.classList.remove('shadow-xl');
+        }
+    });
+</script>
+
+</body>
+</html>

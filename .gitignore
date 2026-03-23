@@ -5,3 +5,4 @@ venv/
 *.pdf
 temp_plan.pdf
 .DS_Store
+waitlist.json
