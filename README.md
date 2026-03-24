@@ -124,7 +124,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
-FROM_EMAIL=noreply@offgridscout.com
+FROM_EMAIL=noreply@offgridscout.co.uk
 ```
 
 ## 🌐 Data Sources

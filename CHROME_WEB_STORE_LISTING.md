@@ -27,7 +27,7 @@ Each property gets a Sovereignty Score from 0-100 based on weighted analysis of 
 • We only access the current listing page when YOU click scan
 • No background tracking or browsing history collection
 • API key stored locally in your browser
-• Full privacy policy: https://off-grid-api-1.onrender.com/static/privacy.html
+• Full privacy policy: https://www.offgridscout.co.uk/static/privacy.html
 
 💰 PRICING
 • FREE: 3 scans per day — perfect for casual browsing
