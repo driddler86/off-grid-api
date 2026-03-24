@@ -12,9 +12,9 @@ FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:8888")
 
 # Price IDs - set these after creating products in Stripe Dashboard
 PRICE_IDS = {
-    "scout": os.getenv("STRIPE_PRICE_SCOUT", ""),
-    "pioneer": os.getenv("STRIPE_PRICE_PIONEER", ""),
-    "lifetime": os.getenv("STRIPE_PRICE_LIFETIME", ""),
+    "scout": os.getenv("STRIPE_PRICE_SCOUT", "price_1TEUEODq7JpYvSe24fMOocLX"),
+    "pioneer": os.getenv("STRIPE_PRICE_PIONEER", "price_1TEUEODq7JpYvSe2YXcbhx5h"),
+    "lifetime": os.getenv("STRIPE_PRICE_LIFETIME", "price_1TEUEPDq7JpYvSe2AHqdvC91"),
 }
 
 def create_checkout_session(plan: str, customer_email: str = None) -> dict:
