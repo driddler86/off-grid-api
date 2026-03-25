@@ -172,13 +172,17 @@ def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, al
         else:
             features = TIER_FEATURES["free"]
 
+        # Extract score from dossier for extension display
+        import re
+        score_match = re.search(r'Sovereignty Score[:\s]+(\d{1,3})', dossier, re.IGNORECASE)
+        score = int(score_match.group(1)) if score_match else None
+
         return {
             "status": "success",
             "dossier": dossier,
+            "score": score,
             "tier": user_tier,
             "features": features,
-        }
-
     except HTTPException:
         raise  # Re-raise HTTP exceptions as-is
     except Exception as e:
