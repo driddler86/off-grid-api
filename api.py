@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
@@ -311,6 +312,45 @@ def verify_key(x_api_key: str = Header(..., alias="X-API-Key")):
     if not stats:
         raise HTTPException(status_code=401, detail="Invalid API key")
     return {"status": "success", **stats}
+
+
+@app.get("/auth/session")
+def get_session(session_id: str):
+    """Resolve a Stripe checkout session_id to the user's API key.
+    Called by success.html after payment to display the key to the user.
+    """
+    import stripe
+    from stripe_integration import PRICE_IDS
+    stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
+    if not stripe.api_key:
+        raise HTTPException(status_code=503, detail="Payment system not configured")
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid session: {e}")
+
+    customer_email = session.get("customer_email") or ""
+    plan = session.get("metadata", {}).get("plan", "scout")
+
+    if not customer_email:
+        raise HTTPException(status_code=400, detail="No email associated with this session")
+
+    # Look up or create the user — payment webhook may have already done this
+    from auth import validate_api_key as _validate, _load_users, generate_api_key, _hash_key, _save_users
+    users = _load_users()
+    for uid, user in users.items():
+        if user.get("email") == customer_email:
+            # Re-generate key so we can return it (key is hashed in DB)
+            new_key = generate_api_key()
+            user["api_key_hash"] = _hash_key(new_key)
+            user["tier"] = plan
+            _save_users(users)
+            return {"api_key": new_key, "tier": plan, "email": customer_email}
+
+    # User not yet created (webhook might be delayed) — create them now
+    from auth import create_user as _create
+    result = _create(email=customer_email, tier=plan)
+    return {"api_key": result["api_key"], "tier": plan, "email": customer_email}
 
 
 @app.get("/auth/usage")
