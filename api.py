@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
@@ -172,9 +171,8 @@ def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, al
         else:
             features = TIER_FEATURES["free"]
 
-        # Extract score from dossier for extension display
         import re
-       score_match = re.search(r'(?:FINAL OFF GRID SCORE|Sovereignty Score|Overall Score)[:\s]+(\d{1,3})', dossier, re.IGNORECASE)
+        score_match = re.search(r'(?:FINAL OFF GRID SCORE|Sovereignty Score|Overall Score)[:\s]+(\d{1,3})', dossier, re.IGNORECASE)
         score = int(score_match.group(1)) if score_match else None
 
         return {
@@ -183,6 +181,8 @@ def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, al
             "score": score,
             "tier": user_tier,
             "features": features,
+        }
+
     except HTTPException:
         raise  # Re-raise HTTP exceptions as-is
     except Exception as e:
