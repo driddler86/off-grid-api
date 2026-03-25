@@ -312,22 +312,90 @@
     </div>
 </section>
 
-<!-- Waitlist / CTA Section -->
-<section id="waitlist" class="py-24">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="text-4xl mb-4">&#x1f3d5;&#xfe0f;</div>
-        <h2 class="text-3xl sm:text-4xl font-black mb-4">Ready to Scout <span class="text-brand-400">Smarter</span>?</h2>
-        <p class="text-gray-400 text-lg mb-8">Join the early access list. Be first to get the extension when it launches. Founding members get the lifetime deal.</p>
-        <form id="waitlist-form" class="max-w-md mx-auto">
-            <div class="flex flex-col sm:flex-row gap-3">
-                <input type="email" id="email-input" placeholder="your@email.com" required class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition">
-                <button type="submit" class="bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-brand-600/25 whitespace-nowrap">Join Waitlist</button>
+<!-- How to Install Section -->
+<section id="install" class="py-20 bg-dark-900/50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">Up and Running in <span class="text-brand-400">60 Seconds</span></h2>
+            <p class="text-gray-400">Register below, install the extension, paste your key — done.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
+                <div class="w-12 h-12 bg-brand-600/20 border border-brand-600/30 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <span class="text-xl font-black text-brand-400">1</span>
+                </div>
+                <h3 class="font-bold mb-2">Register Free</h3>
+                <p class="text-gray-400 text-sm">Enter your email below. You'll instantly get an <code class="bg-white/10 px-1 rounded text-xs">ogs_</code> API key.</p>
             </div>
-            <p class="text-xs text-gray-500 mt-3">No spam. Unsubscribe anytime. We respect your privacy.</p>
-        </form>
-        <div id="waitlist-success" class="hidden mt-6 bg-brand-900/30 border border-brand-600/30 rounded-xl p-6">
-            <span class="text-2xl">&#x1f389;</span>
-            <p class="text-brand-300 font-semibold mt-2">You're on the list! We'll notify you when Off-Grid Scout launches.</p>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
+                <div class="w-12 h-12 bg-brand-600/20 border border-brand-600/30 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <span class="text-xl font-black text-brand-400">2</span>
+                </div>
+                <h3 class="font-bold mb-2">Install Extension</h3>
+                <p class="text-gray-400 text-sm">Add Off-Grid Scout to Chrome. Click the 🏕️ icon in your toolbar and paste your key.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
+                <div class="w-12 h-12 bg-brand-600/20 border border-brand-600/30 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <span class="text-xl font-black text-brand-400">3</span>
+                </div>
+                <h3 class="font-bold mb-2">Start Scanning</h3>
+                <p class="text-gray-400 text-sm">Browse any UK land listing. When you see the green <strong>GO</strong> badge — click Scan.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Register / CTA Section -->
+<section id="waitlist" class="py-24">
+    <div class="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="text-4xl mb-4">&#x1f3d5;&#xfe0f;</div>
+        <h2 class="text-3xl sm:text-4xl font-black mb-3">Get Your Free <span class="text-brand-400">API Key</span></h2>
+        <p class="text-gray-400 mb-8">3 free scans every day. No card required. Upgrade anytime.</p>
+
+        <!-- Registration form -->
+        <div id="register-form">
+            <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input type="email" id="reg-email" placeholder="your@email.com" required
+                    class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition">
+                <button onclick="registerFree()" id="reg-btn"
+                    class="bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-brand-600/25 whitespace-nowrap">
+                    Get Free Key
+                </button>
+            </div>
+            <div id="reg-error" class="hidden mt-3 text-red-400 text-sm"></div>
+            <p class="text-xs text-gray-500 mt-3">No spam. We respect your privacy. <a href="/static/privacy.html" class="underline">Privacy Policy</a></p>
+        </div>
+
+        <!-- API key reveal (shown after registration) -->
+        <div id="key-reveal" class="hidden mt-2">
+            <div class="bg-brand-900/20 border border-brand-600/30 rounded-2xl p-6 text-left">
+                <p class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-2 text-center">Your API Key</p>
+                <div class="flex items-center gap-3 bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 mb-4">
+                    <span id="revealed-key" class="font-mono text-brand-400 text-sm flex-1 break-all"></span>
+                    <button onclick="copyRevealedKey()" id="reveal-copy-btn"
+                        class="text-xs font-mono border border-brand-600/40 text-brand-400 px-3 py-1 rounded-lg hover:bg-brand-600/20 transition flex-shrink-0">
+                        Copy
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mb-5 text-center">⚠️ Save this — it won't be shown again. Check your email too.</p>
+                <div class="space-y-3">
+                    <div class="flex items-start gap-3 text-sm">
+                        <span class="text-brand-400 font-bold mt-0.5">→</span>
+                        <span class="text-gray-300">
+                            <strong class="text-white">Install the extension</strong> from the
+                            <a href="https://chromewebstore.google.com" target="_blank" class="text-brand-400 underline">Chrome Web Store</a>
+                        </span>
+                    </div>
+                    <div class="flex items-start gap-3 text-sm">
+                        <span class="text-brand-400 font-bold mt-0.5">→</span>
+                        <span class="text-gray-300">Click the 🏕️ icon in Chrome, paste your key, click <strong class="text-white">Connect</strong></span>
+                    </div>
+                    <div class="flex items-start gap-3 text-sm">
+                        <span class="text-brand-400 font-bold mt-0.5">→</span>
+                        <span class="text-gray-300">Browse a land listing — the badge turns <strong class="text-brand-400">GO</strong> on supported sites</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -374,47 +442,83 @@
 
 <!-- JavaScript -->
 <script>
-    // Mobile menu toggle
-    const btn = document.getElementById('mobile-menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    if (btn && menu) {
-        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
-        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        document.querySelector('nav').classList.toggle('shadow-xl', window.scrollY > 50);
+    });
+
+    // ── Free registration ──────────────────────────────────────────────────────
+    async function registerFree() {
+        const email = document.getElementById('reg-email').value.trim();
+        const errEl = document.getElementById('reg-error');
+        const btn   = document.getElementById('reg-btn');
+
+        errEl.classList.add('hidden');
+        if (!email || !email.includes('@')) {
+            errEl.textContent = 'Please enter a valid email address.';
+            errEl.classList.remove('hidden');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Creating account…';
+
+        try {
+            const res = await fetch('/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || `Error ${res.status}`);
+
+            // Show key reveal panel
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('key-reveal').classList.remove('hidden');
+            document.getElementById('revealed-key').textContent = data.api_key;
+
+        } catch(e) {
+            errEl.textContent = e.message || 'Registration failed. Please try again.';
+            errEl.classList.remove('hidden');
+            btn.disabled = false;
+            btn.textContent = 'Get Free Key';
+        }
     }
 
-    // Waitlist form
-    const form = document.getElementById('waitlist-form');
-    const success = document.getElementById('waitlist-success');
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email-input').value;
-            // Call the waitlist API
-            fetch('/waitlist', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})}).then(r=>r.json()).then(d=>console.log('Waitlist:',d)).catch(e=>console.error(e));
-            form.classList.add('hidden');
-            success.classList.remove('hidden');
+    // Allow Enter key on email input
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('reg-email');
+        if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') registerFree(); });
+    });
+
+    function copyRevealedKey() {
+        const key = document.getElementById('revealed-key').textContent;
+        navigator.clipboard.writeText(key).then(() => {
+            const btn = document.getElementById('reveal-copy-btn');
+            btn.textContent = 'Copied ✓';
+            setTimeout(() => { btn.textContent = 'Copy'; }, 2500);
         });
     }
 
-    // Checkout function
+    // ── Stripe checkout ────────────────────────────────────────────────────────
     async function checkout(plan) {
+        const email = document.getElementById('reg-email')?.value.trim() || '';
         try {
-            const res = await fetch("/checkout", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({plan})});
+            const res = await fetch('/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ plan, email: email || undefined }),
+            });
             const data = await res.json();
-            if(data.checkout_url) window.location.href = data.checkout_url;
-            else alert("Payment not configured yet. Join the waitlist!");
-        } catch(e) { alert("Payment not available yet. Join the waitlist!"); }
-    }
-
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-        const nav = document.querySelector('nav');
-        if (window.scrollY > 50) {
-            nav.classList.add('shadow-xl');
-        } else {
-            nav.classList.remove('shadow-xl');
+            if (data.checkout_url) {
+                window.location.href = data.checkout_url;
+            } else {
+                alert('Payment not configured yet — register free to get started!');
+            }
+        } catch(e) {
+            alert('Payment unavailable right now. Register free below!');
         }
-    });
+    }
 </script>
 
 </body>
