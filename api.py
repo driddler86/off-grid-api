@@ -69,8 +69,7 @@ RATE_WINDOW = int(os.getenv("RATE_LIMIT_WINDOW", "60"))
 app.add_middleware(RateLimitMiddleware, max_requests=MAX_REQUESTS, window_seconds=RATE_WINDOW)
 
 # --- Initialize SQLite database ---
-from db import init_db
-init_db()
+import os
 
 
 # --- Issue #1 & #5: Updated PropertyData with lat/lon + validation ---
@@ -373,21 +372,8 @@ def get_session(session_id: str):
     if not customer_email:
         raise HTTPException(status_code=400, detail="No email associated with this session")
 
-    # Look up or create the user — payment webhook may have already done this
-    from auth import validate_api_key as _validate, _load_users, generate_api_key, _hash_key, _save_users
-    users = _load_users()
-    for uid, user in users.items():
-        if user.get("email") == customer_email:
-            # Re-generate key so we can return it (key is hashed in DB)
-            new_key = generate_api_key()
-            user["api_key_hash"] = _hash_key(new_key)
-            user["tier"] = plan
-            _save_users(users)
-            return {"api_key": new_key, "tier": plan, "email": customer_email}
-
-    # User not yet created (webhook might be delayed) — create them now
-    from auth import create_user as _create
-    result = _create(email=customer_email, tier=plan)
+    # Create or update the user at the paid tier — issues a fresh key
+    result = create_user(email=customer_email, tier=plan)
     return {"api_key": result["api_key"], "tier": plan, "email": customer_email}
 
 
@@ -432,7 +418,6 @@ def serve_landing():
 
 
 # --- Admin Dashboard ---
-from db import get_dashboard_stats, get_recent_scans
 ADMIN_KEY = os.getenv("ADMIN_KEY", "change-me-in-production")
 
 @app.get("/admin")
@@ -443,9 +428,19 @@ def serve_admin():
 def admin_dashboard(x_admin_key: str = Header(None, alias="X-Admin-Key")):
     if not x_admin_key or x_admin_key != ADMIN_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
+    from db import _query
+    users      = _query("SELECT COUNT(*) as n FROM users WHERE active=1")
+    waitlist   = _query("SELECT COUNT(*) as n FROM waitlist")
+    scans      = _query("SELECT SUM(scans_total) as n FROM users")
+    paid       = _query("SELECT COUNT(*) as n FROM users WHERE tier != 'free' AND active=1")
     return {
-        "stats": get_dashboard_stats(),
-        "recent_scans": get_recent_scans(limit=20)
+        "stats": {
+            "total_users":    users[0]["n"]    if users    else 0,
+            "waitlist_count": waitlist[0]["n"] if waitlist else 0,
+            "total_scans":    scans[0]["n"]    if scans    else 0,
+            "paid_users":     paid[0]["n"]     if paid     else 0,
+        }
     }
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
