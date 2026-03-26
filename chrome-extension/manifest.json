@@ -1,19 +1,6 @@
-{
-  "manifest_version": 3,
-  "name": "Off-Grid Scout",
-  "version": "1.0.0",
-  "description": "AI-powered UK land evaluation for off-grid living. Instantly analyse any property listing for sovereignty potential.",
-  "permissions": [
-    "activeTab",
-    "storage"
-  ],
-  "host_permissions": [
-    "https://www.rightmove.co.uk/*",
-    "https://www.zoopla.co.uk/*",
-    "https://www.onthemarket.com/*",
-    "https://search.savills.com/*",
-    "https://www.primelocation.com/*",
-    "https://www.plotfinder.net/*"
+  "https://www.plotfinder.net/*",
+    "https://www.uklandandfarms.co.uk/*",
+    "https://www.symondsandsampson.co.uk/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -36,9 +23,13 @@
         "https://www.onthemarket.com/details/*",
         "https://search.savills.com/property-detail/*",
         "https://www.primelocation.com/for-sale/*",
-        "https://www.plotfinder.net/plots/*"
+        "https://www.plotfinder.net/plots/*",
+        "https://www.uklandandfarms.co.uk/*",
+        "https://www.symondsandsampson.co.uk/*"
       ],
-      "js": ["content.js"],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
