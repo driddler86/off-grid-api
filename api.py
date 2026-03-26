@@ -96,25 +96,59 @@ scanner = LiveScanner()
 
 # --- Issue #1: Geocoding fallback when lat/lon not provided ---
 def geocode_from_title(title: str) -> tuple:
-    """Use Nominatim to geocode a location from listing title."""
-    try:
-        # Extract potential location words from title
-        response = requests.get(
-            "https://nominatim.openstreetmap.org/search",
-            params={
-                "q": title,
-                "format": "json",
-                "limit": 1,
-                "countrycodes": "gb"  # Limit to UK
-            },
-            headers={"User-Agent": "OffGridScout/1.0"},
-            timeout=10
-        )
-        results = response.json()
-        if results:
-            return float(results[0]["lat"]), float(results[0]["lon"])
-    except Exception as e:
-        logger.warning(f"Geocoding failed: {e}")
+    """Use Nominatim to geocode a location from listing title or description."""
+    import re
+
+    def _query(q):
+        try:
+            r = requests.get(
+                "https://nominatim.openstreetmap.org/search",
+                params={"q": q, "format": "json", "limit": 1, "countrycodes": "gb"},
+                headers={"User-Agent": "OffGridScout/1.0"},
+                timeout=10,
+            )
+            results = r.json()
+            if results:
+                lat, lon = float(results[0]["lat"]), float(results[0]["lon"])
+                # Validate UK bounding box
+                if 49.0 <= lat <= 61.0 and -8.0 <= lon <= 2.0:
+                    return lat, lon
+        except Exception as e:
+            logger.warning(f"Geocoding query failed for '{q}': {e}")
+        return None, None
+
+    # 1. Try extracting a UK postcode first — most reliable
+    postcode_match = re.search(
+        r'\b([A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2})\b', title, re.IGNORECASE
+    )
+    if postcode_match:
+        lat, lon = _query(postcode_match.group(1))
+        if lat: return lat, lon
+
+    # 2. Try "Postcode: XX1 1XX" pattern (added by content script for UKLAF)
+    postcode_tag = re.search(r'Postcode:\s*([A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2})', title, re.IGNORECASE)
+    if postcode_tag:
+        lat, lon = _query(postcode_tag.group(1))
+        if lat: return lat, lon
+
+    # 3. Extract town/county from title — strip acreage and land type words
+    clean = re.sub(
+        r'(\d[\d.,]*\s*acres?|for sale|guide price|£[\d,]+|POA|freehold|leasehold'
+        r'|development land|agricultural land|pasture|woodland|equestrian'
+        r'|smallholding|farm|estate|lot \d+|STP|BNG)',
+        '', title, flags=re.IGNORECASE
+    )
+    # Remove short tokens and split on commas to get location fragments
+    parts = [p.strip() for p in clean.split(',') if len(p.strip()) > 3]
+    # Try each part from the end (most specific location usually at end)
+    for part in reversed(parts):
+        lat, lon = _query(part + ", UK")
+        if lat: return lat, lon
+
+    # 4. Last resort — try the full title
+    lat, lon = _query(title)
+    if lat: return lat, lon
+
     return None, None
 
 
