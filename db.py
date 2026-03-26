@@ -1,16 +1,3 @@
-
-"""
-db.py — Persistent user storage via Cloudflare D1 REST API.
-Replaces the local users.json file which gets wiped on every Render deploy.
-
-Required environment variables:
-  CF_ACCOUNT_ID      — Your Cloudflare account ID
-  CF_D1_DATABASE_ID  — The D1 database UUID
-  CF_API_TOKEN       — Cloudflare API token with D1 edit permission
-
-These should be set in Render → Environment.
-"""
-
 import os
 import hashlib
 import secrets
