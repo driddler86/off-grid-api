@@ -11,6 +11,8 @@ const SUPPORTED_DOMAINS = [
   'savills.com',
   'primelocation.com',
   'plotfinder.net',
+  'uklandandfarms.co.uk',
+  'symondsandsampson.co.uk',
 ];
 
 // Update badge when tab changes
@@ -53,7 +55,6 @@ function updateBadge(tab) {
 // Listen for install/update
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    // Open welcome/setup page on first install
     chrome.tabs.create({ url: `${API_BASE}/#pricing` });
   }
 });
