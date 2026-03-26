@@ -43,7 +43,8 @@ def _query(sql: str, params: list = None) -> list:
         resp = requests.post(
             D1_URL,
             headers={
-                "Authorization": f"Bearer {CF_API_TOKEN}",
+                "X-Auth-Email": os.getenv("CF_EMAIL", ""),
+"X-Auth-Key": CF_API_TOKEN,
                 "Content-Type": "application/json",
             },
             json=payload,
@@ -72,7 +73,8 @@ def _execute(sql: str, params: list = None) -> bool:
         resp = requests.post(
             D1_URL,
             headers={
-                "Authorization": f"Bearer {CF_API_TOKEN}",
+            "X-Auth-Email": os.getenv("CF_EMAIL", ""),
+"X-Auth-Key": CF_API_TOKEN,   
                 "Content-Type": "application/json",
             },
             json=payload,
