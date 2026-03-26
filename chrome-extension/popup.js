@@ -67,7 +67,8 @@ async function showMainScreen() {
 // --- Account Management ---
 async function loadAccountInfo() {
   try {
-    const res = await fetch(`${API_BASE}/auth/verify`, { signal: AbortSignal.timeout(20000),
+    const res = await fetch(`${API_BASE}/auth/verify`, {
+      signal: AbortSignal.timeout(10000),
       headers: { 'X-API-Key': currentApiKey }
     });
     if (!res.ok) throw new Error('Invalid key');
@@ -92,7 +93,6 @@ async function loadAccountInfo() {
     }
   } catch (e) {
     console.error('Failed to load account:', e);
-    // Key might be invalid
     showMsg(setupMsg, 'API key appears invalid. Please re-enter.', 'error');
     await chrome.storage.local.remove(['apiKey']);
     currentApiKey = null;
@@ -127,7 +127,6 @@ async function checkCurrentTab() {
 
     siteUrl.textContent = tab.url.substring(0, 60) + (tab.url.length > 60 ? '...' : '');
     scanBtn.disabled = !supported;
-
   } catch (e) {
     siteName.textContent = 'Cannot detect page';
     siteDot.classList.add('unsupported');
@@ -142,7 +141,6 @@ async function scanProperty() {
   resultsSection.classList.add('hidden');
 
   try {
-    // Extract data from current page via content script
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const pageData = await chrome.tabs.sendMessage(tab.id, { action: 'extractData' });
 
@@ -150,9 +148,10 @@ async function scanProperty() {
       throw new Error('Could not extract property data from this page');
     }
 
-    // Call the API
-    const res = await fetch(`${API_BASE}/scan`, { signal: AbortSignal.timeout(300000),
+    // Call the API with 5 minute timeout
+    const res = await fetch(`${API_BASE}/scan`, {
       method: 'POST',
+      signal: AbortSignal.timeout(300000),
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': currentApiKey,
@@ -177,8 +176,7 @@ async function scanProperty() {
     const result = await res.json();
     lastDossier = result.dossier;
     displayResults(result);
-    await loadAccountInfo(); // Refresh scan count
-
+    await loadAccountInfo();
   } catch (e) {
     loadingSection.classList.add('hidden');
     showMsg(setupMsg, e.message, 'error');
@@ -194,7 +192,6 @@ function displayResults(result) {
 
   const dossier = result.dossier || '';
 
-  // Extract score from dossier text
   const scoreMatch = dossier.match(/(?:sovereignty|overall|total).*?(\d{1,3})(?:\/100|%)/i);
   const score = scoreMatch ? parseInt(scoreMatch[1]) : null;
 
@@ -208,7 +205,6 @@ function displayResults(result) {
     scoreVerdict.textContent = 'See full report below';
   }
 
-  // Extract category scores from dossier
   const extractField = (patterns) => {
     for (const p of patterns) {
       const m = dossier.match(p);
@@ -224,10 +220,9 @@ function displayResults(result) {
   document.getElementById('res-grid').textContent = extractField([/grid[:\s]+([^\n]+)/i, /electric[:\s]+([^\n]+)/i]);
   document.getElementById('res-solar').textContent = extractField([/solar.*?(\d[^\n]*)/i, /irradiance[:\s]+([^\n]+)/i]);
 
-  // Feature gating
   const features = result.features || {};
   emailBtn.disabled = !features.email_dossier;
-  if (!features.email_dossier) { signal: AbortSignal.timeout(30000),
+  if (!features.email_dossier) {
     emailBtn.title = 'Upgrade to Scout to email reports';
   }
 }
@@ -236,8 +231,8 @@ function displayResults(result) {
 copyBtn.addEventListener('click', async () => {
   if (lastDossier) {
     await navigator.clipboard.writeText(lastDossier);
-    copyBtn.textContent = '\u2705 Copied!';
-    setTimeout(() => { copyBtn.innerHTML = '&#x1f4cb; Copy Report'; }, 2000);
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => { copyBtn.innerHTML = '📋 Copy Report'; }, 2000);
   }
 });
 
@@ -249,12 +244,13 @@ emailBtn.addEventListener('click', async () => {
   try {
     const res = await fetch(`${API_BASE}/email`, {
       method: 'POST',
+      signal: AbortSignal.timeout(30000),
       headers: { 'Content-Type': 'application/json', 'X-API-Key': currentApiKey },
       body: JSON.stringify({ email, dossier: lastDossier }),
     });
     if (res.ok) {
-      emailBtn.textContent = '\u2705 Sent!';
-      setTimeout(() => { emailBtn.innerHTML = '&#x1f4e7; Email Report'; }, 2000);
+      emailBtn.textContent = '✅ Sent!';
+      setTimeout(() => { emailBtn.innerHTML = '📧 Email Report'; }, 2000);
     }
   } catch (e) {
     alert('Failed to send email: ' + e.message);
@@ -277,7 +273,7 @@ saveKeyBtn.addEventListener('click', async () => {
   await showMainScreen();
 });
 
-registerLink.addEventListener('click', (e) => { signal: AbortSignal.timeout(20000),
+registerLink.addEventListener('click', (e) => {
   e.preventDefault();
   registerForm.classList.toggle('hidden');
 });
@@ -295,6 +291,7 @@ registerBtn.addEventListener('click', async () => {
   try {
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
+      signal: AbortSignal.timeout(10000),
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
     });
@@ -302,13 +299,10 @@ registerBtn.addEventListener('click', async () => {
     if (!res.ok) throw new Error('Registration failed');
     const data = await res.json();
 
-    // Auto-save the key
     currentApiKey = data.api_key;
     await chrome.storage.local.set({ apiKey: data.api_key });
-
     showMsg(setupMsg, `Account created! Key: ${data.api_key.substring(0, 20)}...`, 'success');
     setTimeout(() => showMainScreen(), 1500);
-
   } catch (e) {
     showMsg(setupMsg, 'Registration failed: ' + e.message, 'error');
   }
