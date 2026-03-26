@@ -67,7 +67,7 @@ async function showMainScreen() {
 // --- Account Management ---
 async function loadAccountInfo() {
   try {
-    const res = await fetch(`${API_BASE}/auth/verify`, {
+    const res = await fetch(`${API_BASE}/auth/verify`, { signal: AbortSignal.timeout(20000),
       headers: { 'X-API-Key': currentApiKey }
     });
     if (!res.ok) throw new Error('Invalid key');
@@ -151,7 +151,7 @@ async function scanProperty() {
     }
 
     // Call the API
-    const res = await fetch(`${API_BASE}/scan`, {
+    const res = await fetch(`${API_BASE}/scan`, { signal: AbortSignal.timeout(300000),
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -227,7 +227,7 @@ function displayResults(result) {
   // Feature gating
   const features = result.features || {};
   emailBtn.disabled = !features.email_dossier;
-  if (!features.email_dossier) {
+  if (!features.email_dossier) { signal: AbortSignal.timeout(30000),
     emailBtn.title = 'Upgrade to Scout to email reports';
   }
 }
@@ -277,7 +277,7 @@ saveKeyBtn.addEventListener('click', async () => {
   await showMainScreen();
 });
 
-registerLink.addEventListener('click', (e) => {
+registerLink.addEventListener('click', (e) => { signal: AbortSignal.timeout(20000),
   e.preventDefault();
   registerForm.classList.toggle('hidden');
 });
