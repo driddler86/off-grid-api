@@ -15,3 +15,8 @@ offgridscout.db-shm
 stripe.env
 \n*.backup*
 *.backup2
+
+# Backup files
+*.backup*
+*.backup2
+
