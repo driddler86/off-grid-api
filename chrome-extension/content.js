@@ -1,5 +1,5 @@
-// Off-Grid Scout - Content Script
-// Extracts property listing data from supported UK property websites
+// Off-Grid Scout - Enhanced Content Script
+// Extracts property listing data from supported UK property websites with multiple fallback selectors
 
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -10,8 +10,36 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true; // Keep message channel open for async
 });
 
+// Utility: get text from first matching selector from array
+function getTextFromSelectors(selectors) {
+  if (!Array.isArray(selectors)) {
+    selectors = [selectors];
+  }
+
+  for (const selector of selectors) {
+    try {
+      const element = document.querySelector(selector);
+      if (element && element.textContent && element.textContent.trim()) {
+        return element.textContent.trim();
+      }
+    } catch (e) {
+      // Silently continue to next selector
+    }
+  }
+  return null;
+}
+
+// Enhanced getText that supports arrays
+function getText(selectorOrArray) {
+  if (Array.isArray(selectorOrArray)) {
+    return getTextFromSelectors(selectorOrArray);
+  }
+  return getTextFromSelectors([selectorOrArray]);
+}
+
 function extractPropertyData() {
   const hostname = window.location.hostname.replace('www.', '');
+  console.log(`Off-Grid Scout: Extracting from ${hostname}`);
 
   const extractors = {
     'rightmove.co.uk': extractRightmove,
@@ -25,7 +53,9 @@ function extractPropertyData() {
   for (const [domain, extractor] of Object.entries(extractors)) {
     if (hostname.includes(domain)) {
       try {
-        return extractor();
+        const result = extractor();
+        console.log(`Off-Grid Scout: Successfully extracted from ${domain}`, result);
+        return result;
       } catch (e) {
         console.error(`Off-Grid Scout: Extraction failed for ${domain}:`, e);
         return fallbackExtract();
@@ -33,187 +63,222 @@ function extractPropertyData() {
     }
   }
 
+  console.log('Off-Grid Scout: No specific extractor found, using fallback');
   return fallbackExtract();
 }
 
-// --- Rightmove ---
+// --- Rightmove --- with multiple fallback selectors
 function extractRightmove() {
-  const title = getText('h1.property-header-bedroom-and-price') ||
-                getText('h1') ||
-                document.title;
+  const titleSelectors = [
+    'h1.property-header-bedroom-and-price',
+    'h1.property-header-title',
+    'h1[data-testid="header-title"]',
+    'h1',
+    '.property-header h1',
+    '[data-testid="property-header"] h1',
+    'title'
+  ];
 
-  const address = getText('[data-testid="address-label"]') ||
-                  getText('.property-header-bedroom-and-price') ||
-                  getText('address');
+  const addressSelectors = [
+    '[data-testid="address-label"]',
+    '.property-header-address',
+    '.property-header-bedroom-and-price',
+    'address',
+    '[itemprop="address"]',
+    '.property-header h2',
+    '.address'
+  ];
 
-  const description = getText('[data-testid="truncated-text-paragraph"]') ||
-                      getText('.sect-body') ||
-                      getMetaContent('description');
+  const descriptionSelectors = [
+    '[data-testid="truncated-text-paragraph"]',
+    '.sect-body',
+    '.property-description',
+    '[data-testid="description"]',
+    '.description',
+    '#description'
+  ];
 
-  // Try to get coordinates from page scripts
+  const priceSelectors = [
+    '[data-testid="price"]',
+    '.property-header-price',
+    '.price',
+    '[itemprop="price"]'
+  ];
+
+  const title = getText(titleSelectors) || document.title;
+  const address = getText(addressSelectors);
+  const description = getText(descriptionSelectors);
+  const price = getText(priceSelectors);
+
   const coords = extractCoordsFromScripts();
 
   return {
-    title: cleanText(`${title} ${address}`.trim()),
-    description: cleanText(description),
+    site: 'Rightmove',
+    title,
+    address,
+    description,
+    price,
+    url: window.location.href,
     lat: coords.lat,
     lon: coords.lon,
-    url: window.location.href,
-    source: 'rightmove',
   };
 }
 
-// --- Zoopla ---
+// --- Zoopla --- with multiple fallback selectors
 function extractZoopla() {
-  const title = getText('h1[data-testid="listing-title"]') ||
-                getText('h1') ||
-                document.title;
+  const titleSelectors = [
+    'h1[data-testid="listing-details-title"]',
+    'h1.listing-details-title',
+    'h1',
+    '.listing-details h1',
+    'title'
+  ];
 
-  const address = getText('[data-testid="address-label"]') ||
-                  getText('h2.listing-details-address');
+  const addressSelectors = [
+    '[data-testid="listing-details-address"]',
+    '.listing-details-address',
+    'address',
+    '[itemprop="address"]',
+    '.address'
+  ];
 
-  const description = getText('[data-testid="listing_description"]') ||
-                      getText('.listing-details-tab') ||
-                      getMetaContent('description');
+  const descriptionSelectors = [
+    '[data-testid="listing-details-description"]',
+    '.listing-details-description',
+    '.description',
+    '#description'
+  ];
+
+  const priceSelectors = [
+    '[data-testid="listing-details-price"]',
+    '.listing-details-price',
+    '.price',
+    '[itemprop="price"]'
+  ];
+
+  const title = getText(titleSelectors) || document.title;
+  const address = getText(addressSelectors);
+  const description = getText(descriptionSelectors);
+  const price = getText(priceSelectors);
 
   const coords = extractCoordsFromScripts();
 
   return {
-    title: cleanText(`${title} ${address || ''}`.trim()),
-    description: cleanText(description),
+    site: 'Zoopla',
+    title,
+    address,
+    description,
+    price,
+    url: window.location.href,
     lat: coords.lat,
     lon: coords.lon,
-    url: window.location.href,
-    source: 'zoopla',
   };
 }
 
-// --- OnTheMarket ---
+// --- OnTheMarket --- (simplified for brevity)
 function extractOnTheMarket() {
-  const title = getText('h1.title') ||
-                getText('h1') ||
-                document.title;
-
-  const description = getText('.description') ||
-                      getText('.property-description') ||
-                      getMetaContent('description');
+  const title = getText(['h1.property-detail-title', 'h1', 'title']) || document.title;
+  const address = getText(['.property-detail-address', 'address', '.address']);
+  const description = getText(['.property-detail-description', '.description', '#description']);
+  const price = getText(['.property-detail-price', '.price', '[itemprop="price"]']);
 
   const coords = extractCoordsFromScripts();
 
   return {
-    title: cleanText(title),
-    description: cleanText(description),
+    site: 'OnTheMarket',
+    title,
+    address,
+    description,
+    price,
+    url: window.location.href,
     lat: coords.lat,
     lon: coords.lon,
-    url: window.location.href,
-    source: 'onthemarket',
   };
 }
 
-// --- Savills ---
+// --- Savills --- (simplified for brevity)
 function extractSavills() {
-  const title = getText('.property-detail__title') ||
-                getText('h1') ||
-                document.title;
-
-  const description = getText('.property-detail__description') ||
-                      getMetaContent('description');
+  const title = getText(['h1.property-title', 'h1', 'title']) || document.title;
+  const address = getText(['.property-address', 'address', '.address']);
+  const description = getText(['.property-description', '.description', '#description']);
+  const price = getText(['.property-price', '.price', '[itemprop="price"]']);
 
   const coords = extractCoordsFromScripts();
 
   return {
-    title: cleanText(title),
-    description: cleanText(description),
+    site: 'Savills',
+    title,
+    address,
+    description,
+    price,
+    url: window.location.href,
     lat: coords.lat,
     lon: coords.lon,
-    url: window.location.href,
-    source: 'savills',
   };
 }
 
-// --- PrimeLocation ---
+// --- PrimeLocation --- (simplified for brevity)
 function extractPrimeLocation() {
-  const title = getText('h1') || document.title;
-  const description = getText('.listing-description') ||
-                      getMetaContent('description');
+  const title = getText(['h1.listing-title', 'h1', 'title']) || document.title;
+  const address = getText(['.listing-address', 'address', '.address']);
+  const description = getText(['.listing-description', '.description', '#description']);
+  const price = getText(['.listing-price', '.price', '[itemprop="price"]']);
 
   const coords = extractCoordsFromScripts();
 
   return {
-    title: cleanText(title),
-    description: cleanText(description),
+    site: 'PrimeLocation',
+    title,
+    address,
+    description,
+    price,
+    url: window.location.href,
     lat: coords.lat,
     lon: coords.lon,
-    url: window.location.href,
-    source: 'primelocation',
   };
 }
 
-// --- PlotFinder ---
+// --- PlotFinder --- (simplified for brevity)
 function extractPlotFinder() {
-  const title = getText('h1') || document.title;
-  const description = getText('.plot-description') ||
-                      getText('.description') ||
-                      getMetaContent('description');
+  const title = getText(['h1.plot-title', 'h1', 'title']) || document.title;
+  const address = getText(['.plot-address', 'address', '.address']);
+  const description = getText(['.plot-description', '.description', '#description']);
+  const price = getText(['.plot-price', '.price', '[itemprop="price"]']);
 
   const coords = extractCoordsFromScripts();
 
   return {
-    title: cleanText(title),
-    description: cleanText(description),
+    site: 'PlotFinder',
+    title,
+    address,
+    description,
+    price,
+    url: window.location.href,
     lat: coords.lat,
     lon: coords.lon,
-    url: window.location.href,
-    source: 'plotfinder',
   };
 }
 
-// --- Fallback ---
-function fallbackExtract() {
-  return {
-    title: cleanText(document.title),
-    description: cleanText(getMetaContent('description') || ''),
-    lat: null,
-    lon: null,
-    url: window.location.href,
-    source: 'unknown',
-  };
-}
-
-// --- Utilities ---
-function getText(selector) {
-  const el = document.querySelector(selector);
-  return el ? el.textContent.trim() : '';
-}
-
-function getMetaContent(name) {
-  const meta = document.querySelector(`meta[name="${name}"]`) ||
-               document.querySelector(`meta[property="og:${name}"]`);
-  return meta ? meta.getAttribute('content') : '';
-}
-
-function cleanText(text) {
-  if (!text) return '';
-  return text.replace(/\s+/g, ' ').trim().substring(0, 5000);
-}
-
+// Enhanced coordinate extraction with multiple methods
 function extractCoordsFromScripts() {
-  // Try to find lat/lon in page scripts or data attributes
   let lat = null, lon = null;
 
-  // Method 1: Check meta tags
-  const latMeta = document.querySelector('meta[property="place:location:latitude"]');
-  const lonMeta = document.querySelector('meta[property="place:location:longitude"]');
+  // Method 1: Meta tags (Open Graph, Schema.org)
+  const latMeta = document.querySelector('meta[property="place:location:latitude"], meta[name="latitude"], meta[property="latitude"]');
+  const lonMeta = document.querySelector('meta[property="place:location:longitude"], meta[name="longitude"], meta[property="longitude"]');
   if (latMeta && lonMeta) {
     lat = parseFloat(latMeta.getAttribute('content'));
     lon = parseFloat(lonMeta.getAttribute('content'));
-    if (!isNaN(lat) && !isNaN(lon)) return { lat, lon };
+    if (!isNaN(lat) && !isNaN(lon) && isUKCoord(lat, lon)) {
+      console.log('Off-Grid Scout: Found coordinates in meta tags');
+      return { lat, lon };
+    }
   }
 
   // Method 2: Search through script tags for coordinate patterns
-  const scripts = document.querySelectorAll('script:not([src])');
+  const scripts = document.querySelectorAll('script');
   for (const script of scripts) {
-    const text = script.textContent;
+    const text = script.textContent || script.innerHTML || '';
 
     // Pattern: latitude: 51.123, longitude: -0.456
     const latMatch = text.match(/["']?latitude["']?\s*[=:]\s*(-?\d+\.\d+)/i);
@@ -221,7 +286,10 @@ function extractCoordsFromScripts() {
     if (latMatch && lonMatch) {
       lat = parseFloat(latMatch[1]);
       lon = parseFloat(lonMatch[1]);
-      if (isUKCoord(lat, lon)) return { lat, lon };
+      if (isUKCoord(lat, lon)) {
+        console.log('Off-Grid Scout: Found coordinates in script (latitude/longitude pattern)');
+        return { lat, lon };
+      }
     }
 
     // Pattern: "lat":51.123,"lng":-0.456
@@ -229,32 +297,117 @@ function extractCoordsFromScripts() {
     if (latLngMatch) {
       lat = parseFloat(latLngMatch[1]);
       lon = parseFloat(latLngMatch[2]);
-      if (isUKCoord(lat, lon)) return { lat, lon };
+      if (isUKCoord(lat, lon)) {
+        console.log('Off-Grid Scout: Found coordinates in script (lat/lng pattern)');
+        return { lat, lon };
+      }
     }
 
-    // Pattern: center: [51.123, -0.456]
-    const centerMatch = text.match(/center\s*:\s*\[\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*\]/i);
+    // Pattern: Google Maps center: [51.123, -0.456]
+    const centerMatch = text.match(/center\s*[:=]\s*\[\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*\]/);
     if (centerMatch) {
       lat = parseFloat(centerMatch[1]);
       lon = parseFloat(centerMatch[2]);
-      if (isUKCoord(lat, lon)) return { lat, lon };
+      if (isUKCoord(lat, lon)) {
+        console.log('Off-Grid Scout: Found coordinates in script (Google Maps center)');
+        return { lat, lon };
+      }
+    }
+
+    // Pattern: Leaflet map center
+    const leafletMatch = text.match(/setView\s*\(\s*\[\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*\]/);
+    if (leafletMatch) {
+      lat = parseFloat(leafletMatch[1]);
+      lon = parseFloat(leafletMatch[2]);
+      if (isUKCoord(lat, lon)) {
+        console.log('Off-Grid Scout: Found coordinates in script (Leaflet setView)');
+        return { lat, lon };
+      }
     }
   }
 
-  // Method 3: Check data attributes on map elements
-  const mapEl = document.querySelector('[data-lat][data-lng]') ||
-                document.querySelector('[data-latitude][data-longitude]');
+  // Method 3: Data attributes on map elements
+  const mapEl = document.querySelector('[data-lat][data-lng], [data-latitude][data-longitude], [data-coordinates]');
   if (mapEl) {
     lat = parseFloat(mapEl.getAttribute('data-lat') || mapEl.getAttribute('data-latitude'));
     lon = parseFloat(mapEl.getAttribute('data-lng') || mapEl.getAttribute('data-longitude'));
-    if (isUKCoord(lat, lon)) return { lat, lon };
+
+    // Try parsing data-coordinates attribute
+    if (isNaN(lat) || isNaN(lon)) {
+      const coordsAttr = mapEl.getAttribute('data-coordinates');
+      if (coordsAttr) {
+        const coordsMatch = coordsAttr.match(/(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+        if (coordsMatch) {
+          lat = parseFloat(coordsMatch[1]);
+          lon = parseFloat(coordsMatch[2]);
+        }
+      }
+    }
+
+    if (isUKCoord(lat, lon)) {
+      console.log('Off-Grid Scout: Found coordinates in data attributes');
+      return { lat, lon };
+    }
   }
 
+  // Method 4: Iframe src with coordinates
+  const iframes = document.querySelectorAll('iframe[src*="maps"], iframe[src*="google"], iframe[src*="leaflet"]');
+  for (const iframe of iframes) {
+    const src = iframe.getAttribute('src') || '';
+    // Look for q= or ll= parameters in Google Maps URLs
+    const qMatch = src.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    const llMatch = src.match(/[?&]ll=(-?\d+\.\d+),(-?\d+\.\d+)/);
+
+    if (qMatch) {
+      lat = parseFloat(qMatch[1]);
+      lon = parseFloat(qMatch[2]);
+    } else if (llMatch) {
+      lat = parseFloat(llMatch[1]);
+      lon = parseFloat(llMatch[2]);
+    }
+
+    if (isUKCoord(lat, lon)) {
+      console.log('Off-Grid Scout: Found coordinates in iframe src');
+      return { lat, lon };
+    }
+  }
+
+  console.log('Off-Grid Scout: No coordinates found');
   return { lat: null, lon: null };
+}
+
+function fallbackExtract() {
+  console.log('Off-Grid Scout: Using fallback extraction');
+
+  // Try to get any h1 as title
+  const h1 = document.querySelector('h1');
+  const title = h1 ? h1.textContent.trim() : document.title;
+
+  // Try to get address from common elements
+  const addressEl = document.querySelector('address, [itemprop="address"], .address');
+  const address = addressEl ? addressEl.textContent.trim() : null;
+
+  // Try to get description
+  const descEl = document.querySelector('meta[name="description"], .description, #description');
+  let description = null;
+  if (descEl) {
+    description = descEl.getAttribute('content') || descEl.textContent.trim();
+  }
+
+  const coords = extractCoordsFromScripts();
+
+  return {
+    site: 'Unknown',
+    title,
+    address,
+    description,
+    price: null,
+    url: window.location.href,
+    lat: coords.lat,
+    lon: coords.lon,
+  };
 }
 
 function isUKCoord(lat, lon) {
   return !isNaN(lat) && !isNaN(lon) && lat >= 49 && lat <= 61 && lon >= -8 && lon <= 2;
 }
-
-console.log('Off-Grid Scout content script loaded');

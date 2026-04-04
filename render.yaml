@@ -1,0 +1,22 @@
+# Render Blueprint for Off-Grid Scout
+# Includes scheduled database backups
+
+services:
+  - type: web
+    name: off-grid-scout-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port 10000
+    envVars:
+      - key: DATABASE_PATH
+        value: offgridscout.db
+      # ... other env vars
+
+  # Optional: Cron job for database backups (requires paid tier)
+  # - type: cron
+  #   name: db-backup
+  #   schedule: "0 */6 * * *"  # Every 6 hours
+  #   buildCommand: ""
+  #   startCommand: ./render_backup.sh
+  #   envVars:
+  #     - fromGroup: offgridscout

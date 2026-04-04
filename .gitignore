@@ -12,3 +12,6 @@ offgridscout.db
 offgridscout.db-wal
 offgridscout.db-shm
 *.json.bak
+stripe.env
+\n*.backup*
+*.backup2
