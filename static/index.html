@@ -16,19 +16,19 @@
                         serif: ['Playfair Display', 'serif']
                     },
                     colors: {
-                                                forest: {
-                            50: '#F5FAF5',
-                            100: '#E0F0E0',
-                            200: '#C6DABF',
-                            300: '#A8E0B0',
-                            400: '#88D498',
-                            500: '#1A936F',
-                            600: '#1A5D3A',
-                            700: '#114B5F',
-                            800: '#0B3D2C',
-                            900: '#062019',
-                            950: '#041710'
-                        },
+                                                                        forest: {
+                            50: '#8fce9c',
+                            100: '#82bb8e',
+                            200: '#75a880',
+                            300: '#689672',
+                            400: '#5b8364',
+                            500: '#4e7056',
+                            600: '#415d48',
+                            700: '#344b3a',
+                            800: '#27382c',
+                            900: '#1a261d',
+                            950: '#0d130f',
+                        },,
                         earth: {
                             50: 'var(--earth-50)',
                             100: 'var(--earth-100)',
@@ -42,46 +42,58 @@
                             900: 'var(--earth-900)',
                             950: 'var(--earth-950)',
                         },,
-                        sky: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 
-                            400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 
-                            800: '#075985', 900: '#0c4a6e', 950: '#082f49'
+                                                sky: {
+                            50: '#6e9adc',
+                            100: '#648cc8',
+                            200: '#5a7eb4',
+                            300: '#5070a0',
+                            400: '#46628c',
+                            500: '#3c5478',
+                            600: '#324664',
+                            700: '#283850',
+                            800: '#1e2a3c',
+                            900: '#141c28',
+                            950: '#0a0e14',
                         }
                     }
                 }
             }
         }
     </script>
-    <style>      :root {
-        /* Dark mode (default) - much darker earth palette */
-        --earth-50: #1a1814;
-        --earth-100: #2a2822;
-        --earth-200: #3a382f;
-        --earth-300: #4a483c;
-        --earth-400: #5a5849;
-        --earth-500: #6a6856;
-        --earth-600: #7a7863;
-        --earth-700: #8a8870;
-        --earth-800: #9a987d;
-        --earth-900: #aaa88a;
-        --earth-950: #bab897;
-      }      :root.light-mode {
-        /* Light mode - dark blue/gray theme */
-        --earth-50: #0a0a0a;
-        --earth-100: #1a1a1a;
-        --earth-200: #2a2a2a;
-        --earth-300: #3a3a3a;
-        --earth-400: #4a4a4a;
-        --earth-500: #5a5a5a;
-        --earth-600: #6a6a6a;
-        --earth-700: #7a7a7a;
-        --earth-800: #8a8a8a;
-        --earth-900: #9a9a9a;
-        --earth-950: #aaaaaa;
+    <style>            :root {
+        /* Dark mode - rich dark green palette */
+        --earth-50: #8fce9c;
+        --earth-100: #82bb8e;
+        --earth-200: #75a880;
+        --earth-300: #689672;
+        --earth-400: #5b8364;
+        --earth-500: #4e7056;
+        --earth-600: #415d48;
+        --earth-700: #344b3a;
+        --earth-800: #27382c;
+        --earth-900: #1a261d;
+        --earth-950: #0d130f;
+      }            :root.light-mode {
+        /* Light mode - rich dark blue palette */
+        --earth-50: #6e9adc;
+        --earth-100: #648cc8;
+        --earth-200: #5a7eb4;
+        --earth-300: #5070a0;
+        --earth-400: #46628c;
+        --earth-500: #3c5478;
+        --earth-600: #324664;
+        --earth-700: #283850;
+        --earth-800: #1e2a3c;
+        --earth-900: #141c28;
+        --earth-950: #0a0e14;
       }
       /* Override gradient for light mode */
-      :root.light-mode         .organic-bg {
-            background: linear-gradient(145deg, #1a1814 0%, #2a2822 25%, #3a382f 50%, #4a483c 75%, #5a5849 100%);
+      :root.light-mode .organic-bg {
+        background: linear-gradient(145deg, #0a0e14 0%, #141c28 25%, #1e2a3c 50%, #283850 75%, #324664 100%);
+      }
+      /* Override gradient for light mode */
+      :root.light-mode                 .organic-bg {
+            background: linear-gradient(145deg, #0d130f 0%, #1a261d 25%, #27382c 50%, #344b3a 75%, #415d48 100%);
             background-size: 400% 400%;
             min-height: 100vh;
             animation: gradientShift 25s ease infinite;
@@ -89,8 +101,8 @@
     </style>
 
     <style>
-                .organic-bg {
-            background: linear-gradient(145deg, #1a1814 0%, #2a2822 25%, #3a382f 50%, #4a483c 75%, #5a5849 100%);
+                        .organic-bg {
+            background: linear-gradient(145deg, #0d130f 0%, #1a261d 25%, #27382c 50%, #344b3a 75%, #415d48 100%);
             background-size: 400% 400%;
             min-height: 100vh;
             animation: gradientShift 25s ease infinite;
@@ -104,7 +116,7 @@
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
         }
         .leaf-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10c-8 0-15 5-15 15 0 10 15 25 15 25s15-15 15-25c0-10-7-15-15-15z' fill='none' stroke='%238f7a54' stroke-width='0.3' opacity='0.15'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10c-8 0-15 5-15 15 0 10 15 25 15 25s15-15 15-25c0-10-7-15-15-15z' fill='none' stroke='%235b8364' stroke-width='0.3' opacity='0.15'/%3E%3C/svg%3E");
         }
         .handwritten {
             font-family: 'Brush Script MT', cursive;
@@ -114,26 +126,26 @@
             border-radius: 42% 58% 37% 63% / 45% 45% 55% 55%;
         }
         .shadow-organic {
-            box-shadow: 8px 8px 16px rgba(37, 29, 24, 0.3),
-                       -4px -4px 12px rgba(143, 122, 84, 0.1);
+            box-shadow: 8px 8px 16px rgba(13, 19, 15, 0.3),
+                       -4px -4px 12px rgba(91, 131, 100, 0.1);
         }
         .transition-slow {
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .hover-lift:hover {
             transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(20, 33, 14, 0.25);
+            box-shadow: 0 20px 40px rgba(13, 19, 15, 0.25);
         }
         .border-natural {
-            border: 1px solid rgba(143, 122, 84, 0.3);
-            background: linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(143, 122, 84, 0.05));
+            border: 1px solid rgba(91, 131, 100, 0.3);
+            background: linear-gradient(to bottom right, rgba(143, 206, 156, 0.05), rgba(91, 131, 100, 0.05));
         }
         .score-dial {
-            background: conic-gradient(#8f7a54 0deg, #1A936F calc(var(--score) * 3.6deg), #334e24 calc(var(--score) * 3.6deg), #334e24 360deg);
+            background: conic-gradient(#5b8364 0deg, #1A936F calc(var(--score) * 3.6deg), #334e24 calc(var(--score) * 3.6deg), #334e24 360deg);
         }
     </style>
 </head>
-<body class="organic-bg paper-texture text-white font-sans antialiased">
+<body class="organic-bg paper-texture text-earth-50 font-sans antialiased">
 
 <!-- Navigation -->
 <nav class="fixed top-0 w-full z-50 bg-earth-950/90 backdrop-blur-md border-b border-earth-800/30">
@@ -420,7 +432,7 @@
             </div>
             <!-- Scout (Most Popular) -->
             <div class="border-2 border-earth-500 rounded-2xl p-8 relative transition-slow hover-lift bg-earth-950/30">
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-earth-600 text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-earth-600 text-earth-50 text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
                 <div class="text-sm text-earth-300 font-medium uppercase tracking-wider mb-2">Scout</div>
                 <div class="flex items-baseline mb-6">
                     <span class="text-4xl font-bold font-serif">£9</span>
@@ -468,7 +480,7 @@
         <div id="register-form">
             <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
                 <input type="email" id="reg-email" placeholder="your.email@example.com" required
-                    class="flex-1 bg-earth-950/50 border border-earth-700/50 rounded-organic px-5 py-4 text-white placeholder-earth-500 focus:outline-none focus:border-earth-400 focus:ring-1 focus:ring-earth-400 transition-slow">
+                    class="flex-1 bg-earth-950/50 border border-earth-700/50 rounded-organic px-5 py-4 text-earth-50 placeholder-earth-500 focus:outline-none focus:border-earth-400 focus:ring-1 focus:ring-earth-400 transition-slow">
                 <button onclick="registerFree()" id="reg-btn"
                     class="bg-earth-600 hover:bg-earth-500 px-8 py-4 rounded-organic font-bold transition-slow shadow-organic whitespace-nowrap">
                     Get Free Access
