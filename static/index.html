@@ -3,524 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Off-Grid Scout — Find Your Perfect Off-Grid Land in the UK</title>
-    <meta name="description" content="Stop guessing about land suitability. Our AI-powered tool evaluates UK land plots for off-grid potential—flood risk, energy, water, planning—in seconds.">
+    <title>Off-Grid Scout — AI-Powered Land Evaluation for Off-Grid Living</title>
+    <meta name="description" content="Instantly evaluate any UK land plot for off-grid living potential. Flood risk, energy, water, planning — all analyzed in seconds.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { 
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        moss: { 
-                            50: '#f6f9f3', 100: '#e9f0e2', 200: '#d3e1c6', 300: '#b5cc9f', 
-                            400: '#91b373', 500: '#6d9a4e', 600: '#527a36', 700: '#3f602a', 
-                            800: '#334e24', 900: '#2b4120', 950: '#14210e' 
-                        },
-                        earth: {
-                            50: '#f8f5f0', 100: '#eae5d9', 200: '#d5ccb5', 300: '#bbac8a', 
-                            400: '#a48f67', 500: '#8f7a54', 600: '#786349', 700: '#604d3c', 
-                            800: '#4f4034', 900: '#44382f', 950: '#251d18'
-                        },
-                        sky: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 
-                            400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 
-                            800: '#075985', 900: '#0c4a6e', 950: '#082f49'
-                        }
+                        brand: { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d' },
+                        dark: { 800:'#1a1a2e', 900:'#0f0f1a' }
                     }
                 }
             }
         }
     </script>
     <style>
-        .organic-bg {
-            background: linear-gradient(145deg, #14210e 0%, #1a2b13 25%, #2b4120 50%, #334e24 75%, #3f602a 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 25s ease infinite;
-        }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .paper-texture {
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-        }
-        .leaf-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10c-8 0-15 5-15 15 0 10 15 25 15 25s15-15 15-25c0-10-7-15-15-15z' fill='none' stroke='%236d9a4e' stroke-width='0.3' opacity='0.15'/%3E%3C/svg%3E");
-        }
-        .handwritten {
-            font-family: 'Brush Script MT', cursive;
-            font-weight: 400;
-        }
-        .rounded-organic {
-            border-radius: 42% 58% 37% 63% / 45% 45% 55% 55%;
-        }
-        .shadow-organic {
-            box-shadow: 8px 8px 16px rgba(20, 33, 14, 0.3),
-                       -4px -4px 12px rgba(109, 154, 78, 0.1);
-        }
-        .transition-slow {
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .hover-lift:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(20, 33, 14, 0.25);
-        }
-        .border-natural {
-            border: 1px solid rgba(109, 154, 78, 0.3);
-            background: linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(109, 154, 78, 0.05));
-        }
-        .score-dial {
-            background: conic-gradient(#6d9a4e 0deg, #6d9a4e calc(var(--score) * 3.6deg), #334e24 calc(var(--score) * 3.6deg), #334e24 360deg);
-        }
+        .gradient-bg{background:linear-gradient(135deg,#0f0f1a 0%,#1a1a2e 50%,#162416 100%)}
+        .glow{box-shadow:0 0 40px rgba(34,197,94,0.15)}
+        .glow-text{text-shadow:0 0 30px rgba(34,197,94,0.3)}
+        .card-hover{transition:all .3s ease}
+        .card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+        .pulse-dot{animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        .fade-in{animation:fadeIn .8s ease-out}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .hero-pattern{background-image:radial-gradient(circle at 20% 50%,rgba(34,197,94,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(34,197,94,0.05) 0%,transparent 50%)}
+        .score-ring{background:conic-gradient(#22c55e 0deg,#22c55e 270deg,#333 270deg,#333 360deg)}
+        html{scroll-behavior:smooth}
     </style>
 </head>
-<body class="organic-bg paper-texture text-white font-sans antialiased">
+<body class="gradient-bg text-white font-sans antialiased">
 
 <!-- Navigation -->
-<nav class="fixed top-0 w-full z-50 bg-moss-950/90 backdrop-blur-md border-b border-moss-800/30">
+<nav class="fixed top-0 w-full z-50 bg-dark-900/80 backdrop-blur-xl border-b border-white/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-organic bg-gradient-to-br from-moss-500 to-moss-700 flex items-center justify-center shadow-organic">
-                    <span class="text-sm font-bold">🌲</span>
-                </div>
-                <div>
-                    <div class="text-lg font-serif font-semibold tracking-tight">Off-Grid <span class="text-moss-400">Scout</span></div>
-                    <div class="text-xs text-moss-300 -mt-1">by land seekers, for land seekers</div>
-                </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">&#x1f3d5;&#xfe0f;</span>
+                <span class="text-xl font-bold">Off-Grid <span class="text-brand-400">Scout</span></span>
             </div>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#features" class="text-moss-300 hover:text-moss-100 transition-slow text-sm font-medium">Capabilities</a>
-                <a href="#how-it-works" class="text-moss-300 hover:text-moss-100 transition-slow text-sm font-medium">How it Works</a>
-                <a href="#pricing" class="text-moss-300 hover:text-moss-100 transition-slow text-sm font-medium">Pricing</a>
-                <a href="#stories" class="text-moss-300 hover:text-moss-100 transition-slow text-sm font-medium">Stories</a>
-                <a href="#waitlist" class="bg-moss-600 hover:bg-moss-500 px-5 py-2 rounded-organic font-medium transition-slow shadow-organic text-sm">Join Early Access</a>
+                <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
+                <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How It Works</a>
+                <a href="#pricing" class="text-gray-300 hover:text-white transition">Pricing</a>
+                <a href="#faq" class="text-gray-300 hover:text-white transition">FAQ</a>
+                <a href="#waitlist" class="bg-brand-600 hover:bg-brand-500 px-5 py-2 rounded-lg font-semibold transition">Get Early Access</a>
             </div>
         </div>
     </div>
 </nav>
 
 <!-- Hero Section -->
-<section class="leaf-pattern min-h-screen flex items-center pt-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-            <div class="space-y-8">
-                <div>
-                    <div class="inline-flex items-center bg-moss-900/40 border border-moss-700/30 rounded-full px-4 py-2 mb-6">
-                        <span class="w-2 h-2 bg-moss-400 rounded-full mr-2 animate-pulse"></span>
-                        <span class="text-moss-300 text-sm font-medium">Early access for UK land seekers</span>
-                    </div>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
-                        Find land that <span class="text-moss-300">feels like home</span>, before you set foot on it
-                    </h1>
-                    <p class="text-xl text-moss-200 mb-8 max-w-lg leading-relaxed">
-                        We've walked miles of muddy fields so you don't have to. Off-Grid Scout uses real UK data to evaluate land for off-grid living—giving you the clarity to make confident decisions.
-                    </p>
+<section class="hero-pattern min-h-screen flex items-center pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in">
+                <div class="inline-flex items-center bg-brand-900/30 border border-brand-700/30 rounded-full px-4 py-1.5 mb-6">
+                    <span class="pulse-dot w-2 h-2 bg-brand-400 rounded-full mr-2"></span>
+                    <span class="text-brand-300 text-sm font-medium">Now in Early Access</span>
                 </div>
-                <div class="space-y-6">
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#waitlist" class="bg-moss-600 hover:bg-moss-500 px-8 py-4 rounded-organic font-bold text-lg text-center transition-slow hover-lift shadow-organic flex items-center justify-center">
-                            <span class="mr-2">🏕️</span> Start Your Search
-                        </a>
-                        <a href="#how-it-works" class="border-natural hover:border-moss-500 px-8 py-4 rounded-organic font-medium text-lg text-center transition-slow hover-lift flex items-center justify-center">
-                            How It Works
-                        </a>
-                    </div>
-                    <div class="flex items-center space-x-8 text-sm text-moss-400">
-                        <div class="flex items-center">
-                            <span class="text-moss-500 mr-2">✓</span> No credit card required
-                        </div>
-                        <div class="flex items-center">
-                            <span class="text-moss-500 mr-2">✓</span> 3 free evaluations
-                        </div>
-                        <div class="flex items-center">
-                            <span class="text-moss-500 mr-2">✓</span> Cancel anytime
-                        </div>
-                    </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6">
+                    Find Your Perfect<span class="text-brand-400 glow-text"> Off-Grid</span> Land in Seconds
+                </h1>
+                <p class="text-xl text-gray-400 mb-8 max-w-lg">
+                    AI-powered Chrome extension that instantly evaluates UK land plots for off-grid living. Flood risk, energy potential, water sources, planning policy — all analyzed while you browse.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                    <a href="#waitlist" class="bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold text-lg text-center transition shadow-lg shadow-brand-600/25">&#x1f680; Get Early Access</a>
+                    <a href="#how-it-works" class="border border-white/20 hover:border-white/40 px-8 py-4 rounded-xl font-semibold text-lg text-center transition">See How It Works</a>
+                </div>
+                <div class="flex items-center space-x-6 text-sm text-gray-500">
+                    <div>&#x2713; Free trial included</div>
+                    <div>&#x2713; No card required</div>
+                    <div>&#x2713; Cancel anytime</div>
                 </div>
             </div>
-            
-            <!-- Authentic Score Card -->
-            <div class="flex justify-center">
-                <div class="border-natural rounded-2xl p-8 max-w-md w-full shadow-organic transition-slow hover-lift bg-moss-950/40 backdrop-blur-sm">
-                    <div class="flex items-center justify-between mb-8">
-                        <div>
-                            <div class="text-sm text-moss-300 font-medium">Land Sovereignty Score</div>
-                            <div class="text-xs text-moss-400">Plot near Hexham, Northumberland</div>
-                        </div>
-                        <span class="text-xs bg-moss-800/50 text-moss-300 px-3 py-1 rounded-full">Live Analysis</span>
+            <!-- Score Mockup -->
+            <div class="fade-in flex justify-center">
+                <div class="bg-dark-800/60 backdrop-blur border border-white/10 rounded-2xl p-8 glow max-w-md w-full">
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-sm text-gray-400">Sovereignty Score</span>
+                        <span class="text-xs bg-brand-900/50 text-brand-300 px-2 py-1 rounded-full">&#x26a1; Live</span>
                     </div>
-                    
-                    <div class="flex items-center justify-center mb-8">
-                        <div class="relative w-40 h-40">
-                            <div class="score-dial w-full h-full rounded-full flex items-center justify-center" style="--score: 78">
-                                <div class="bg-moss-950 w-32 h-32 rounded-full flex items-center justify-center">
-                                    <div class="text-center">
-                                        <span class="text-5xl font-bold text-moss-300 font-serif">78</span>
-                                        <div class="text-xs text-moss-400 mt-1">out of 100</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="flex items-center justify-center mb-6">
+                        <div class="relative w-32 h-32"><div class="score-ring w-full h-full rounded-full flex items-center justify-center"><div class="bg-dark-900 w-24 h-24 rounded-full flex items-center justify-center"><span class="text-4xl font-black text-brand-400">78</span></div></div></div>
                     </div>
-                    
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <span class="text-moss-400 mr-2">📜</span>
-                                <span class="text-sm text-moss-300">Planning Potential</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-24 h-1.5 bg-moss-900 rounded-full mr-2">
-                                    <div class="h-full bg-moss-500 rounded-full" style="width: 85%"></div>
-                                </div>
-                                <span class="text-sm font-medium text-moss-300">85%</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <span class="text-moss-400 mr-2">☀️</span>
-                                <span class="text-sm text-moss-300">Solar Viability</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-24 h-1.5 bg-moss-900 rounded-full mr-2">
-                                    <div class="h-full bg-amber-500 rounded-full" style="width: 72%"></div>
-                                </div>
-                                <span class="text-sm font-medium text-moss-300">72%</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <span class="text-moss-400 mr-2">💧</span>
-                                <span class="text-sm text-moss-300">Water Access</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-24 h-1.5 bg-moss-900 rounded-full mr-2">
-                                    <div class="h-full bg-sky-500 rounded-full" style="width: 68%"></div>
-                                </div>
-                                <span class="text-sm font-medium text-moss-300">68%</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <span class="text-moss-400 mr-2">🗻</span>
-                                <span class="text-sm text-moss-300">Terrain & Access</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-24 h-1.5 bg-moss-900 rounded-full mr-2">
-                                    <div class="h-full bg-earth-500 rounded-full" style="width: 90%"></div>
-                                </div>
-                                <span class="text-sm font-medium text-moss-300">90%</span>
-                            </div>
-                        </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f4dc; Planning</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-brand-400 rounded-full" style="width:85%"></div></div><span class="text-sm font-semibold">85%</span></div></div>
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x2600;&#xfe0f; Energy</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-yellow-400 rounded-full" style="width:72%"></div></div><span class="text-sm font-semibold">72%</span></div></div>
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f4a7; Water</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-blue-400 rounded-full" style="width:68%"></div></div><span class="text-sm font-semibold">68%</span></div></div>
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f6e3;&#xfe0f; Terrain</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-orange-400 rounded-full" style="width:90%"></div></div><span class="text-sm font-semibold">90%</span></div></div>
                     </div>
-                    
-                    <div class="mt-8 pt-6 border-t border-moss-800/30">
-                        <div class="flex items-start">
-                            <span class="text-moss-400 mr-2 mt-0.5">💡</span>
-                            <div>
-                                <div class="text-sm font-medium text-moss-300">Hidden Opportunity Found</div>
-                                <div class="text-xs text-moss-400 mt-1">Previous planning refusal nearby strengthens Para 84 case</div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/10"><div class="flex items-center text-brand-300"><span class="mr-2">&#x1f47b;</span><span class="text-sm font-semibold">Ghost Application Found — Para 84 Candidate!</span></div></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Real Data Sources -->
-<section class="py-16 border-y border-moss-800/20 bg-moss-950/30">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-serif font-bold mb-4">Built on real UK data sources</h2>
-            <p class="text-moss-300 text-lg max-w-2xl mx-auto">We don't guess—we analyze actual data from trusted UK authorities</p>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-moss-900/20">
-                <div class="text-2xl mb-3">🏞️</div>
-                <div class="text-xl font-bold text-moss-300 mb-1">Environment Agency</div>
-                <div class="text-sm text-moss-400">Flood risk mapping</div>
-            </div>
-            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-moss-900/20">
-                <div class="text-2xl mb-3">🗺️</div>
-                <div class="text-xl font-bold text-moss-300 mb-1">Ordnance Survey</div>
-                <div class="text-sm text-moss-400">Terrain & elevation</div>
-            </div>
-            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-moss-900/20">
-                <div class="text-2xl mb-3">💧</div>
-                <div class="text-xl font-bold text-moss-300 mb-1">BGS</div>
-                <div class="text-sm text-moss-400">Groundwater & soil data</div>
-            </div>
-            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-moss-900/20">
-                <div class="text-2xl mb-3">📋</div>
-                <div class="text-xl font-bold text-moss-300 mb-1">Local Planning</div>
-                <div class="text-sm text-moss-400">Historical applications</div>
-            </div>
+<!-- Stats Bar -->
+<section class="border-y border-white/5 bg-dark-900/50">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div><div class="text-3xl font-black text-brand-400">7+</div><div class="text-sm text-gray-400 mt-1">UK Data Sources</div></div>
+            <div><div class="text-3xl font-black text-brand-400">30s</div><div class="text-sm text-gray-400 mt-1">Average Scan Time</div></div>
+            <div><div class="text-3xl font-black text-brand-400">&pound;000s</div><div class="text-sm text-gray-400 mt-1">Saved in Research</div></div>
+            <div><div class="text-3xl font-black text-brand-400">Para 84</div><div class="text-sm text-gray-400 mt-1">Ghost App Detection</div></div>
         </div>
     </div>
 </section>
 
-<!-- Features with Stories -->
+<!-- Features Section -->
 <section id="features" class="py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">What we look for <span class="text-moss-400">in land</span></h2>
-            <p class="text-moss-300 text-lg max-w-2xl mx-auto">The same things you'd look for if you had weeks to research each plot</p>
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">Everything You Need to <span class="text-brand-400">Scout Smart</span></h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">7+ UK data sources analyzed automatically while you browse property listings</p>
         </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-moss-950/20">
-                <div class="text-3xl mb-6">🌊</div>
-                <h3 class="text-xl font-serif font-bold mb-3">Will it flood?</h3>
-                <p class="text-moss-300 mb-4">We check Environment Agency flood maps for Zones 2 & 3—because no one wants soggy boots or worse.</p>
-                <div class="text-sm text-moss-400 italic">"Saved us from a beautiful riverside plot that floods every winter." — Sarah, Devon</div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x1f30a;</div>
+                <h3 class="text-lg font-bold mb-2">Flood Risk Analysis</h3>
+                <p class="text-gray-400 text-sm">Real-time checks against the UK Environment Agency flood map. Instantly flags Zone 2 and Zone 3 risks.</p>
             </div>
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-moss-950/20">
-                <div class="text-3xl mb-6">⚡</div>
-                <h3 class="text-xl font-serif font-bold mb-3">True off-grid potential</h3>
-                <p class="text-moss-300 mb-4">Distance to power lines, solar irradiance, wind patterns. We calculate what energy you can realistically generate.</p>
-                <div class="text-sm text-moss-400 italic">"Found a plot with perfect southern exposure we'd have missed." — Tom, Wales</div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x26a1;</div>
+                <h3 class="text-lg font-bold mb-2">Grid Distance Check</h3>
+                <p class="text-gray-400 text-sm">Uses OpenStreetMap to calculate proximity to the nearest power line. True off-grid scoring.</p>
             </div>
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-moss-950/20">
-                <div class="text-3xl mb-6">📜</div>
-                <h3 class="text-xl font-serif font-bold mb-3">Planning secrets</h3>
-                <p class="text-moss-300 mb-4">Ghost applications, Para 84 opportunities, local policy nuances. The hidden factors that make or break planning.</p>
-                <div class="text-sm text-moss-400 italic">"Uncovered a refused application that became our planning key." — Mike, Yorkshire</div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x2600;&#xfe0f;</div>
+                <h3 class="text-lg font-bold mb-2">Solar &amp; Wind Potential</h3>
+                <p class="text-gray-400 text-sm">NASA POWER satellite data for solar irradiance and wind speed. Terrain-adjusted for slope and aspect.</p>
+            </div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x1f4a7;</div>
+                <h3 class="text-lg font-bold mb-2">Water &amp; Soil Resources</h3>
+                <p class="text-gray-400 text-sm">British Geological Survey data on aquifer productivity and soil type. Know your borehole potential.</p>
+            </div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x1f47b;</div>
+                <h3 class="text-lg font-bold mb-2">Ghost App Detection</h3>
+                <p class="text-gray-400 text-sm">Finds refused planning applications nearby — the secret key to Paragraph 84 development rights.</p>
+            </div>
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-3xl mb-4">&#x1f3d4;&#xfe0f;</div>
+                <h3 class="text-lg font-bold mb-2">Terrain &amp; Access</h3>
+                <p class="text-gray-400 text-sm">Elevation, slope, aspect analysis plus road access within 150m. South-facing land gets a boost.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- How It Works -->
-<section id="how-it-works" class="py-24 bg-moss-950/40">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="how-it-works" class="py-24 bg-dark-900/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">How it <span class="text-moss-400">works</span></h2>
-            <p class="text-moss-300 text-lg">Simple enough for your first plot, powerful enough for your forever home</p>
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">How It <span class="text-brand-400">Works</span></h2>
+            <p class="text-gray-400 text-lg">Three simple steps to evaluate any UK land plot</p>
         </div>
-        <div class="grid md:grid-cols-3 gap-12">
+        <div class="grid md:grid-cols-3 gap-8">
             <div class="text-center">
-                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-moss-900/30">
-                    <span class="text-2xl font-bold text-moss-400">1</span>
+                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl font-black text-brand-400">1</span>
                 </div>
-                <h3 class="text-xl font-serif font-bold mb-4">Browse as normal</h3>
-                <p class="text-moss-300">Look at land on Rightmove, OnTheMarket, or any UK property site. Nothing changes in your routine.</p>
+                <h3 class="text-xl font-bold mb-3">Browse Listings</h3>
+                <p class="text-gray-400">Visit any UK land listing on Rightmove, OnTheMarket, or other property sites as you normally would.</p>
             </div>
             <div class="text-center">
-                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-moss-900/30">
-                    <span class="text-2xl font-bold text-moss-400">2</span>
+                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl font-black text-brand-400">2</span>
                 </div>
-                <h3 class="text-xl font-serif font-bold mb-4">Click to scout</h3>
-                <p class="text-moss-300">Our extension analyzes the plot using 7+ data sources. Takes about 30 seconds.</p>
+                <h3 class="text-xl font-bold mb-3">Click Scout</h3>
+                <p class="text-gray-400">Hit the Off-Grid Scout extension icon. Our AI analyses 7+ data sources in under 30 seconds.</p>
             </div>
             <div class="text-center">
-                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-moss-900/30">
-                    <span class="text-2xl font-bold text-moss-400">3</span>
+                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl font-black text-brand-400">3</span>
                 </div>
-                <h3 class="text-xl font-serif font-bold mb-4">Get your dossier</h3>
-                <p class="text-moss-300">Receive a Sovereignty Score with planning analysis, energy potential, water resources, and next steps.</p>
+                <h3 class="text-xl font-bold mb-3">Get Your Dossier</h3>
+                <p class="text-gray-400">Receive a full Sovereignty Score with planning analysis, energy potential, water resources, and CapEx estimates.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Simple Pricing -->
+<!-- Pricing Section -->
 <section id="pricing" class="py-24">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">Honest <span class="text-moss-400">pricing</span></h2>
-            <p class="text-moss-300 text-lg">Try it free. Pay only when you're ready to scout seriously.</p>
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">Simple, Honest <span class="text-brand-400">Pricing</span></h2>
+            <p class="text-gray-400 text-lg">Start free. Upgrade when you're ready.</p>
         </div>
-        <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <!-- Explorer -->
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-moss-950/20">
-                <div class="text-sm text-moss-400 font-medium uppercase tracking-wider mb-2">Explorer</div>
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- Free Tier -->
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-8">
+                <div class="text-sm text-gray-400 font-semibold uppercase tracking-wider mb-2">Free Trial</div>
                 <div class="flex items-baseline mb-6">
-                    <span class="text-4xl font-bold font-serif">£0</span>
-                    <span class="text-moss-400 ml-2">forever</span>
+                    <span class="text-4xl font-black">&pound;0</span>
+                    <span class="text-gray-400 ml-2">forever</span>
                 </div>
-                <ul class="space-y-4 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> 3 land evaluations</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Basic sovereignty score</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Flood risk check</li>
-                    <li class="flex items-center text-sm text-moss-500"><span class="mr-3">—</span> Email reports</li>
-                    <li class="flex items-center text-sm text-moss-500"><span class="mr-3">—</span> Planning deep-dive</li>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> 3 property scans</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Basic Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Flood risk check</li>
+                    <li class="flex items-center text-sm text-gray-500"><span class="mr-2">&#x2717;</span> Email reports</li>
+                    <li class="flex items-center text-sm text-gray-500"><span class="mr-2">&#x2717;</span> Ghost App detection</li>
                 </ul>
-                <a href="#waitlist" class="block w-full border-natural hover:border-moss-500 py-3 rounded-organic font-medium text-center transition-slow">Start Free</a>
+                <a href="#waitlist" class="block w-full border border-white/20 hover:border-white/40 py-3 rounded-xl font-semibold text-center transition">Start Free</a>
             </div>
-            <!-- Scout (Most Popular) -->
-            <div class="border-2 border-moss-500 rounded-2xl p-8 relative transition-slow hover-lift bg-moss-950/30">
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-moss-600 text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
-                <div class="text-sm text-moss-300 font-medium uppercase tracking-wider mb-2">Scout</div>
+            <!-- Scout Tier -->
+            <div class="card-hover bg-brand-900/20 border-2 border-brand-500/50 rounded-2xl p-8 relative">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-600 text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
+                <div class="text-sm text-brand-300 font-semibold uppercase tracking-wider mb-2">Scout</div>
                 <div class="flex items-baseline mb-6">
-                    <span class="text-4xl font-bold font-serif">£9</span>
-                    <span class="text-moss-400 ml-2">/month</span>
+                    <span class="text-4xl font-black">&pound;9.99</span>
+                    <span class="text-gray-400 ml-2">/month</span>
                 </div>
-                <ul class="space-y-4 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> 20 evaluations/month</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Full sovereignty score</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> All data sources</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Email dossier reports</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Ghost application detection</li>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> 20 scans per month</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Full Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> All 7+ data sources</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Email dossier reports</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Ghost App detection</li>
                 </ul>
-                <button onclick="checkout('scout')" class="block w-full bg-moss-600 hover:bg-moss-500 py-3 rounded-organic font-bold text-center transition-slow shadow-organic cursor-pointer">Become a Scout</button>
+                <a href="#waitlist" class="block w-full bg-brand-600 hover:bg-brand-500 py-3 rounded-xl font-bold text-center transition shadow-lg shadow-brand-600/25">Get Scout</a>
             </div>
-            <!-- Pioneer -->
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-moss-950/20">
-                <div class="text-sm text-moss-400 font-medium uppercase tracking-wider mb-2">Pioneer</div>
+            <!-- Pioneer Tier -->
+            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-8">
+                <div class="text-sm text-gray-400 font-semibold uppercase tracking-wider mb-2">Pioneer</div>
                 <div class="flex items-baseline mb-6">
-                    <span class="text-4xl font-bold font-serif">£19</span>
-                    <span class="text-moss-400 ml-2">/month</span>
+                    <span class="text-4xl font-black">&pound;19.99</span>
+                    <span class="text-gray-400 ml-2">/month</span>
                 </div>
-                <ul class="space-y-4 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> <strong>Unlimited</strong> evaluations</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Priority analysis</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Comparative financial estimates</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Direct support access</li>
-                    <li class="flex items-center text-sm"><span class="text-moss-500 mr-3">✓</span> Early feature access</li>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> <strong>Unlimited</strong> scans</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Full Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> All 7+ data sources</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Priority API access</li>
+                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> CapEx financial comparison</li>
                 </ul>
-                <button onclick="checkout('pioneer')" class="block w-full border-natural hover:border-moss-500 py-3 rounded-organic font-medium text-center transition-slow cursor-pointer">Join Pioneers</button>
+                <a href="#waitlist" class="block w-full border border-white/20 hover:border-white/40 py-3 rounded-xl font-semibold text-center transition">Get Pioneer</a>
             </div>
         </div>
-        <div class="mt-12 max-w-2xl mx-auto text-center">
-            <p class="text-moss-300 text-sm">All plans include our Chrome extension. Cancel anytime. Questions? <a href="mailto:hello@offgridscout.co.uk" class="text-moss-400 underline">hello@offgridscout.co.uk</a></p>
+        <!-- Lifetime Deal Banner -->
+        <div class="mt-12 max-w-3xl mx-auto bg-gradient-to-r from-brand-900/40 to-brand-800/20 border border-brand-600/30 rounded-2xl p-8 text-center">
+            <div class="text-2xl mb-2">&#x1f525;</div>
+            <h3 class="text-xl font-bold mb-2">Founding Member Lifetime Deal</h3>
+            <p class="text-gray-400 mb-4">First 100 users get <strong class="text-brand-400">&pound;99 one-time</strong> for unlimited everything. Forever.</p>
+            <a href="#waitlist" class="inline-block bg-brand-600 hover:bg-brand-500 px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-brand-600/25">Claim Your Spot</a>
         </div>
     </div>
 </section>
 
-<!-- Waitlist/CTA -->
-<section id="waitlist" class="py-24 bg-moss-950/50">
-    <div class="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="text-5xl mb-6">🌲</div>
-        <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">Start your search today</h2>
-        <p class="text-moss-300 mb-8">Get 3 free evaluations. No credit card required.</p>
-        
-        <div id="register-form">
-            <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input type="email" id="reg-email" placeholder="your.email@example.com" required
-                    class="flex-1 bg-moss-950/50 border border-moss-700/50 rounded-organic px-5 py-4 text-white placeholder-moss-500 focus:outline-none focus:border-moss-400 focus:ring-1 focus:ring-moss-400 transition-slow">
-                <button onclick="registerFree()" id="reg-btn"
-                    class="bg-moss-600 hover:bg-moss-500 px-8 py-4 rounded-organic font-bold transition-slow shadow-organic whitespace-nowrap">
-                    Get Free Access
-                </button>
+<!-- FAQ Section -->
+<section id="faq" class="py-24 bg-dark-900/50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">Frequently Asked <span class="text-brand-400">Questions</span></h2>
+        </div>
+        <div class="space-y-4">
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    What property sites does it work with?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">Off-Grid Scout works with any UK property listing website including Rightmove, OnTheMarket, Zoopla, LandForSale.co.uk, and more. Simply browse a listing and click the extension icon.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    What is a "Sovereignty Score"?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">The Sovereignty Score (0-100) is our proprietary rating that combines planning policy analysis (40%), energy potential (30%), and water/resource availability (30%). Higher scores mean better off-grid potential. Scores above 70 are considered excellent candidates.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    What is a "Ghost Application"?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">A Ghost Application is a previously refused residential planning application near your target plot. Under Paragraph 84 of the NPPF, these refused applications can actually strengthen your case for alternative rural development. Our AI detects these automatically &mdash; a feature no other tool offers.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    How accurate is the data?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">We pull from official UK government and scientific sources: Environment Agency (flood), NASA POWER (energy), British Geological Survey (water/soil), OpenStreetMap (infrastructure), and PlanIt (planning history). The data is as accurate as the source agencies provide. We always recommend professional surveys before purchase.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    Does it work outside the UK?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">Currently Off-Grid Scout is UK-only, as it relies on UK-specific data sources (Environment Agency, BGS, UK planning system). We're exploring expansion to other countries in the future.</div>
+            </details>
+            <details class="group bg-white/5 border border-white/10 rounded-xl">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+                    Can I cancel my subscription?
+                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">Yes, cancel anytime with one click from your dashboard. No lock-in contracts, no cancellation fees. Your access continues until the end of your billing period.</div>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- Waitlist / CTA Section -->
+<section id="waitlist" class="py-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="text-4xl mb-4">&#x1f3d5;&#xfe0f;</div>
+        <h2 class="text-3xl sm:text-4xl font-black mb-4">Ready to Scout <span class="text-brand-400">Smarter</span>?</h2>
+        <p class="text-gray-400 text-lg mb-8">Join the early access list. Be first to get the extension when it launches. Founding members get the lifetime deal.</p>
+        <form id="waitlist-form" class="max-w-md mx-auto">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <input type="email" id="email-input" placeholder="your@email.com" required class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition">
+                <button type="submit" class="bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-brand-600/25 whitespace-nowrap">Join Waitlist</button>
             </div>
-            <div id="reg-error" class="hidden mt-3 text-red-300 text-sm"></div>
-            <p class="text-xs text-moss-500 mt-4">We respect your privacy. No spam, ever. <a href="/static/privacy.html" class="underline text-moss-400">Privacy Policy</a></p>
+            <p class="text-xs text-gray-500 mt-3">No spam. Unsubscribe anytime. We respect your privacy.</p>
+        </form>
+        <div id="waitlist-success" class="hidden mt-6 bg-brand-900/30 border border-brand-600/30 rounded-xl p-6">
+            <span class="text-2xl">&#x1f389;</span>
+            <p class="text-brand-300 font-semibold mt-2">You're on the list! We'll notify you when Off-Grid Scout launches.</p>
         </div>
     </div>
 </section>
 
 <!-- Footer -->
-<footer class="border-t border-moss-800/30 py-12 bg-moss-950/70">
+<footer class="border-t border-white/5 py-12 bg-dark-900/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-4 gap-8">
             <div>
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-8 h-8 rounded-organic bg-gradient-to-br from-moss-500 to-moss-700"></div>
-                    <div class="text-lg font-serif font-semibold">Off-Grid <span class="text-moss-400">Scout</span></div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <span class="text-xl">&#x1f3d5;&#xfe0f;</span>
+                    <span class="text-lg font-bold">Off-Grid <span class="text-brand-400">Scout</span></span>
                 </div>
-                <p class="text-sm text-moss-400">Helping UK land seekers make confident decisions since 2024.</p>
+                <p class="text-sm text-gray-500">AI-powered land evaluation for off-grid living in the UK.</p>
             </div>
             <div>
-                <h4 class="font-medium mb-4 text-moss-300">Product</h4>
-                <ul class="space-y-2 text-sm text-moss-400">
-                    <li><a href="#features" class="hover:text-moss-200 transition-slow">Capabilities</a></li>
-                    <li><a href="#how-it-works" class="hover:text-moss-200 transition-slow">How it Works</a></li>
-                    <li><a href="#pricing" class="hover:text-moss-200 transition-slow">Pricing</a></li>
+                <h4 class="font-semibold mb-4">Product</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#features" class="hover:text-white transition">Features</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition">Pricing</a></li>
+                    <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-medium mb-4 text-moss-300">Resources</h4>
-                <ul class="space-y-2 text-sm text-moss-400">
-                    <li><a href="/static/privacy.html" class="hover:text-moss-200 transition-slow">Privacy</a></li>
-                    <li><a href="/static/terms.html" class="hover:text-moss-200 transition-slow">Terms</a></li>
-                    <li><a href="mailto:hello@offgridscout.co.uk" class="hover:text-moss-200 transition-slow">Contact</a></li>
+                <h4 class="font-semibold mb-4">Legal</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-medium mb-4 text-moss-300">From the team</h4>
-                <p class="text-sm text-moss-400">We're building this tool because we've been where you are—overwhelmed by land listings and uncertain about suitability. We hope it helps.</p>
+                <h4 class="font-semibold mb-4">Connect</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="https://github.com/driddler86" class="hover:text-white transition">GitHub</a></li>
+                    <li><a href="mailto:hello@offgridscout.com" class="hover:text-white transition">Contact</a></li>
+                </ul>
             </div>
         </div>
-        <div class="mt-12 pt-8 border-t border-moss-800/20 text-center text-sm text-moss-500">
-            © 2024 Off-Grid Scout. Made with care in the UK.
+        <div class="mt-12 pt-8 border-t border-white/5 text-center text-sm text-gray-500">
+            &copy; 2025 Off-Grid Scout. All rights reserved.
         </div>
     </div>
 </footer>
 
-<!-- JavaScript (same as before, but updated for new classes) -->
+<!-- JavaScript -->
 <script>
+    // Mobile menu toggle
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    if (btn && menu) {
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
+    }
+
+    // Waitlist form
+    const form = document.getElementById('waitlist-form');
+    const success = document.getElementById('waitlist-success');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email-input').value;
+            // Call the waitlist API
+            fetch('/waitlist', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})}).then(r=>r.json()).then(d=>console.log('Waitlist:',d)).catch(e=>console.error(e));
+            form.classList.add('hidden');
+            success.classList.remove('hidden');
+        });
+    }
+
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
-        document.querySelector('nav').classList.toggle('shadow-organic', window.scrollY > 50);
+        const nav = document.querySelector('nav');
+        if (window.scrollY > 50) {
+            nav.classList.add('shadow-xl');
+        } else {
+            nav.classList.remove('shadow-xl');
+        }
     });
-
-    async function registerFree() {
-        const email = document.getElementById('reg-email').value.trim();
-        const errEl = document.getElementById('reg-error');
-        const btn   = document.getElementById('reg-btn');
-
-        errEl.classList.add('hidden');
-        if (!email || !email.includes('@')) {
-            errEl.textContent = 'Please enter a valid email address.';
-            errEl.classList.remove('hidden');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.textContent = 'Sending...';
-
-        try {
-            const res = await fetch('/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email }),
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || `Error ${res.status}`);
-
-            // Show success
-            alert('Check your email for your free API key and next steps!');
-            document.getElementById('reg-email').value = '';
-
-        } catch(e) {
-            errEl.textContent = e.message || 'Registration failed. Please try again.';
-            errEl.classList.remove('hidden');
-            btn.disabled = false;
-            btn.textContent = 'Get Free Access';
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const input = document.getElementById('reg-email');
-        if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') registerFree(); });
-    });
-
-    async function checkout(plan) {
-        const email = document.getElementById('reg-email')?.value.trim() || '';
-        try {
-            const res = await fetch('/checkout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ plan, email: email || undefined }),
-            });
-            const data = await res.json();
-            if (data.checkout_url) {
-                window.location.href = data.checkout_url;
-            } else {
-                alert('Payment not configured yet — register free to get started!');
-            }
-        } catch(e) {
-            alert('Payment unavailable right now. Register free below!');
-        }
-    }
 </script>
+
 </body>
 </html>
