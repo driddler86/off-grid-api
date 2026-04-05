@@ -52,44 +52,45 @@
             }
         }
     </script>
-    <style>
-      :root {
-        /* Dark mode (default) - earth palette */
-        --earth-50: #f8f5f2;
-        --earth-100: #e8e0d7;
-        --earth-200: #d1c1af;
-        --earth-300: #b9a187;
-        --earth-400: #a48f67;
-        --earth-500: #8f7a54;
-        --earth-600: #786349;
-        --earth-700: #604d3c;
-        --earth-800: #4f4034;
-        --earth-900: #3d3328;
-        --earth-950: #251d18;
-      }
-      :root.light-mode {
-        /* Light mode - inverted earth palette */
-        --earth-50: #251d18;
-        --earth-100: #3d3328;
-        --earth-200: #4f4034;
-        --earth-300: #604d3c;
-        --earth-400: #786349;
-        --earth-500: #8f7a54;
-        --earth-600: #a48f67;
-        --earth-700: #b9a187;
-        --earth-800: #d1c1af;
-        --earth-900: #e8e0d7;
-        --earth-950: #f8f5f2;
+    <style>      :root {
+        /* Dark mode (default) - much darker earth palette */
+        --earth-50: #1a1814;
+        --earth-100: #2a2822;
+        --earth-200: #3a382f;
+        --earth-300: #4a483c;
+        --earth-400: #5a5849;
+        --earth-500: #6a6856;
+        --earth-600: #7a7863;
+        --earth-700: #8a8870;
+        --earth-800: #9a987d;
+        --earth-900: #aaa88a;
+        --earth-950: #bab897;
+      }      :root.light-mode {
+        /* Light mode - dark blue/gray theme */
+        --earth-50: #0a0a0a;
+        --earth-100: #1a1a1a;
+        --earth-200: #2a2a2a;
+        --earth-300: #3a3a3a;
+        --earth-400: #4a4a4a;
+        --earth-500: #5a5a5a;
+        --earth-600: #6a6a6a;
+        --earth-700: #7a7a7a;
+        --earth-800: #8a8a8a;
+        --earth-900: #9a9a9a;
+        --earth-950: #aaaaaa;
       }
       /* Override gradient for light mode */
-      :root.light-mode .organic-bg {
-        background: linear-gradient(145deg, #f8f5f2 0%, #e8e0d7 25%, #d1c1af 50%, #b9a187 75%, #a48f67 100%);
-      }
+      :root.light-mode         .organic-bg {
+            background: linear-gradient(145deg, #1a1814 0%, #2a2822 25%, #3a382f 50%, #4a483c 75%, #5a5849 100%);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            animation: gradientShift 25s ease infinite;
+        }
     </style>
 
     <style>
-        .organic-bg {
-            background: linear-gradient(145deg, #4f4034 0%, #604d3c 25%, #786349 50%, #8f7a54 75%, #a48f67 100%);
+                .organic-bg {
+            background: linear-gradient(145deg, #1a1814 0%, #2a2822 25%, #3a382f 50%, #4a483c 75%, #5a5849 100%);
             background-size: 400% 400%;
             min-height: 100vh;
             animation: gradientShift 25s ease infinite;
@@ -585,7 +586,7 @@
     }
 </script>
 
-    <script>
+        <script>
       const themeToggle = document.getElementById('theme-toggle');
       const themeIconSun = document.getElementById('theme-icon-sun');
       const themeIconMoon = document.getElementById('theme-icon-moon');
@@ -609,13 +610,11 @@
         }
       }
 
-      // Initialize theme
+      // Initialize theme: default to dark, ignoring system preference
       if (savedTheme) {
         setTheme(savedTheme);
-      } else if (prefersDark.matches) {
-        setTheme('dark');
       } else {
-        setTheme('light');
+        setTheme('dark');
       }
 
       // Toggle theme on button click
