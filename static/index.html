@@ -30,10 +30,18 @@
                             950: '#041710'
                         },
                         earth: {
-                            50: '#f8f5f0', 100: '#eae5d9', 200: '#d5ccb5', 300: '#bbac8a', 
-                            400: '#a48f67', 500: '#8f7a54', 600: '#786349', 700: '#604d3c', 
-                            800: '#4f4034', 900: '#44382f', 950: '#251d18'
-                        },
+                            50: 'var(--earth-50)',
+                            100: 'var(--earth-100)',
+                            200: 'var(--earth-200)',
+                            300: 'var(--earth-300)',
+                            400: 'var(--earth-400)',
+                            500: 'var(--earth-500)',
+                            600: 'var(--earth-600)',
+                            700: 'var(--earth-700)',
+                            800: 'var(--earth-800)',
+                            900: 'var(--earth-900)',
+                            950: 'var(--earth-950)',
+                        },,
                         sky: {
                             50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 
                             400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 
@@ -45,8 +53,43 @@
         }
     </script>
     <style>
+      :root {
+        /* Dark mode (default) - earth palette */
+        --earth-50: #f8f5f2;
+        --earth-100: #e8e0d7;
+        --earth-200: #d1c1af;
+        --earth-300: #b9a187;
+        --earth-400: #a48f67;
+        --earth-500: #8f7a54;
+        --earth-600: #786349;
+        --earth-700: #604d3c;
+        --earth-800: #4f4034;
+        --earth-900: #3d3328;
+        --earth-950: #251d18;
+      }
+      :root.light-mode {
+        /* Light mode - inverted earth palette */
+        --earth-50: #251d18;
+        --earth-100: #3d3328;
+        --earth-200: #4f4034;
+        --earth-300: #604d3c;
+        --earth-400: #786349;
+        --earth-500: #8f7a54;
+        --earth-600: #a48f67;
+        --earth-700: #b9a187;
+        --earth-800: #d1c1af;
+        --earth-900: #e8e0d7;
+        --earth-950: #f8f5f2;
+      }
+      /* Override gradient for light mode */
+      :root.light-mode .organic-bg {
+        background: linear-gradient(145deg, #f8f5f2 0%, #e8e0d7 25%, #d1c1af 50%, #b9a187 75%, #a48f67 100%);
+      }
+    </style>
+
+    <style>
         .organic-bg {
-            background: linear-gradient(145deg, #0B3D2C 0%, #114B5F 25%, #1A5D3A 50%, #1A936F 75%, #2BA47E 100%);
+            background: linear-gradient(145deg, #4f4034 0%, #604d3c 25%, #786349 50%, #8f7a54 75%, #a48f67 100%);
             background-size: 400% 400%;
             min-height: 100vh;
             animation: gradientShift 25s ease infinite;
@@ -113,6 +156,16 @@
             </div>
         </div>
     </div>
+
+          <button id="theme-toggle" class="flex items-center space-x-2 px-4 py-2 rounded-lg border border-earth-700 bg-earth-800 text-earth-100 hover:bg-earth-700 transition-colors focus:outline-none focus:ring-2 focus:ring-earth-500 focus:ring-offset-2 focus:ring-offset-earth-900 mr-4">
+            <svg id="theme-icon-sun" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+            </svg>
+            <svg id="theme-icon-moon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+            </svg>
+            <span id="theme-text">Light Mode</span>
+          </button>
 </nav>
 
 <!-- Hero Section -->
@@ -531,5 +584,47 @@
         }
     }
 </script>
+
+    <script>
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIconSun = document.getElementById('theme-icon-sun');
+      const themeIconMoon = document.getElementById('theme-icon-moon');
+      const themeText = document.getElementById('theme-text');
+
+      // Check for saved theme or prefer-color-scheme
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      const savedTheme = localStorage.getItem('theme');
+      
+      function setTheme(theme) {
+        if (theme === 'light') {
+          document.documentElement.classList.add('light-mode');
+          themeIconSun.classList.remove('hidden');
+          themeIconMoon.classList.add('hidden');
+          themeText.textContent = 'Dark Mode';
+        } else {
+          document.documentElement.classList.remove('light-mode');
+          themeIconSun.classList.add('hidden');
+          themeIconMoon.classList.remove('hidden');
+          themeText.textContent = 'Light Mode';
+        }
+      }
+
+      // Initialize theme
+      if (savedTheme) {
+        setTheme(savedTheme);
+      } else if (prefersDark.matches) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+
+      // Toggle theme on button click
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.classList.contains('light-mode') ? 'light' : 'dark';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+      });
+    </script>
 </body>
 </html>
