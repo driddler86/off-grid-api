@@ -60,7 +60,7 @@
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
         }
         .leaf-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10c-8 0-15 5-15 15 0 10 15 25 15 25s15-15 15-25c0-10-7-15-15-15z' fill='none' stroke='%231A936F' stroke-width='0.3' opacity='0.15'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10c-8 0-15 5-15 15 0 10 15 25 15 25s15-15 15-25c0-10-7-15-15-15z' fill='none' stroke='%238f7a54' stroke-width='0.3' opacity='0.15'/%3E%3C/svg%3E");
         }
         .handwritten {
             font-family: 'Brush Script MT', cursive;
@@ -70,8 +70,8 @@
             border-radius: 42% 58% 37% 63% / 45% 45% 55% 55%;
         }
         .shadow-organic {
-            box-shadow: 8px 8px 16px rgba(20, 33, 14, 0.3),
-                       -4px -4px 12px rgba(26, 147, 111, 0.1);
+            box-shadow: 8px 8px 16px rgba(37, 29, 24, 0.3),
+                       -4px -4px 12px rgba(143, 122, 84, 0.1);
         }
         .transition-slow {
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,35 +81,35 @@
             box-shadow: 0 20px 40px rgba(20, 33, 14, 0.25);
         }
         .border-natural {
-            border: 1px solid rgba(26, 147, 111, 0.3);
-            background: linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(26, 147, 111, 0.05));
+            border: 1px solid rgba(143, 122, 84, 0.3);
+            background: linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(143, 122, 84, 0.05));
         }
         .score-dial {
-            background: conic-gradient(#1A936F 0deg, #1A936F calc(var(--score) * 3.6deg), #334e24 calc(var(--score) * 3.6deg), #334e24 360deg);
+            background: conic-gradient(#8f7a54 0deg, #1A936F calc(var(--score) * 3.6deg), #334e24 calc(var(--score) * 3.6deg), #334e24 360deg);
         }
     </style>
 </head>
 <body class="organic-bg paper-texture text-white font-sans antialiased">
 
 <!-- Navigation -->
-<nav class="fixed top-0 w-full z-50 bg-forest-950/90 backdrop-blur-md border-b border-forest-800/30">
+<nav class="fixed top-0 w-full z-50 bg-earth-950/90 backdrop-blur-md border-b border-earth-800/30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-organic bg-gradient-to-br from-forest-500 to-forest-700 flex items-center justify-center shadow-organic">
+                <div class="w-8 h-8 rounded-organic bg-gradient-to-br from-earth-500 to-earth-700 flex items-center justify-center shadow-organic">
                     <span class="text-sm font-bold">🌲</span>
                 </div>
                 <div>
-                    <div class="text-lg font-serif font-semibold tracking-tight">Off-Grid <span class="text-forest-400">Scout</span></div>
-                    <div class="text-xs text-forest-300 -mt-1">by land seekers, for land seekers</div>
+                    <div class="text-lg font-serif font-semibold tracking-tight">Off-Grid <span class="text-earth-400">Scout</span></div>
+                    <div class="text-xs text-earth-300 -mt-1">by land seekers, for land seekers</div>
                 </div>
             </div>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#features" class="text-forest-300 hover:text-forest-100 transition-slow text-sm font-medium">Capabilities</a>
-                <a href="#how-it-works" class="text-forest-300 hover:text-forest-100 transition-slow text-sm font-medium">How it Works</a>
-                <a href="#pricing" class="text-forest-300 hover:text-forest-100 transition-slow text-sm font-medium">Pricing</a>
-                <a href="#stories" class="text-forest-300 hover:text-forest-100 transition-slow text-sm font-medium">Stories</a>
-                <a href="#waitlist" class="bg-forest-600 hover:bg-forest-500 px-5 py-2 rounded-organic font-medium transition-slow shadow-organic text-sm">Join Early Access</a>
+                <a href="#features" class="text-earth-300 hover:text-earth-100 transition-slow text-sm font-medium">Capabilities</a>
+                <a href="#how-it-works" class="text-earth-300 hover:text-earth-100 transition-slow text-sm font-medium">How it Works</a>
+                <a href="#pricing" class="text-earth-300 hover:text-earth-100 transition-slow text-sm font-medium">Pricing</a>
+                <a href="#stories" class="text-earth-300 hover:text-earth-100 transition-slow text-sm font-medium">Stories</a>
+                <a href="#waitlist" class="bg-earth-600 hover:bg-earth-500 px-5 py-2 rounded-organic font-medium transition-slow shadow-organic text-sm">Join Early Access</a>
             </div>
         </div>
     </div>
@@ -121,35 +121,35 @@
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             <div class="space-y-8">
                 <div>
-                    <div class="inline-flex items-center bg-forest-900/40 border border-forest-700/30 rounded-full px-4 py-2 mb-6">
-                        <span class="w-2 h-2 bg-forest-400 rounded-full mr-2 animate-pulse"></span>
-                        <span class="text-forest-300 text-sm font-medium">Early access for UK land seekers</span>
+                    <div class="inline-flex items-center bg-earth-900/40 border border-earth-700/30 rounded-full px-4 py-2 mb-6">
+                        <span class="w-2 h-2 bg-earth-400 rounded-full mr-2 animate-pulse"></span>
+                        <span class="text-earth-300 text-sm font-medium">Early access for UK land seekers</span>
                     </div>
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
-                        Find land that <span class="text-forest-300">feels like home</span>, before you set foot on it
+                        Find land that <span class="text-earth-300">feels like home</span>, before you set foot on it
                     </h1>
-                    <p class="text-xl text-forest-200 mb-8 max-w-lg leading-relaxed">
+                    <p class="text-xl text-earth-200 mb-8 max-w-lg leading-relaxed">
                         We've walked miles of muddy fields so you don't have to. Off-Grid Scout uses real UK data to evaluate land for off-grid living—giving you the clarity to make confident decisions.
                     </p>
                 </div>
                 <div class="space-y-6">
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#waitlist" class="bg-forest-600 hover:bg-forest-500 px-8 py-4 rounded-organic font-bold text-lg text-center transition-slow hover-lift shadow-organic flex items-center justify-center">
+                        <a href="#waitlist" class="bg-earth-600 hover:bg-earth-500 px-8 py-4 rounded-organic font-bold text-lg text-center transition-slow hover-lift shadow-organic flex items-center justify-center">
                             <span class="mr-2">🏕️</span> Start Your Search
                         </a>
-                        <a href="#how-it-works" class="border-natural hover:border-forest-500 px-8 py-4 rounded-organic font-medium text-lg text-center transition-slow hover-lift flex items-center justify-center">
+                        <a href="#how-it-works" class="border-natural hover:border-earth-500 px-8 py-4 rounded-organic font-medium text-lg text-center transition-slow hover-lift flex items-center justify-center">
                             How It Works
                         </a>
                     </div>
-                    <div class="flex items-center space-x-8 text-sm text-forest-400">
+                    <div class="flex items-center space-x-8 text-sm text-earth-400">
                         <div class="flex items-center">
-                            <span class="text-forest-500 mr-2">✓</span> No credit card required
+                            <span class="text-earth-500 mr-2">✓</span> No credit card required
                         </div>
                         <div class="flex items-center">
-                            <span class="text-forest-500 mr-2">✓</span> 3 free evaluations
+                            <span class="text-earth-500 mr-2">✓</span> 3 free evaluations
                         </div>
                         <div class="flex items-center">
-                            <span class="text-forest-500 mr-2">✓</span> Cancel anytime
+                            <span class="text-earth-500 mr-2">✓</span> Cancel anytime
                         </div>
                     </div>
                 </div>
@@ -157,22 +157,22 @@
             
             <!-- Authentic Score Card -->
             <div class="flex justify-center">
-                <div class="border-natural rounded-2xl p-8 max-w-md w-full shadow-organic transition-slow hover-lift bg-forest-950/40 backdrop-blur-sm">
+                <div class="border-natural rounded-2xl p-8 max-w-md w-full shadow-organic transition-slow hover-lift bg-earth-950/40 backdrop-blur-sm">
                     <div class="flex items-center justify-between mb-8">
                         <div>
-                            <div class="text-sm text-forest-300 font-medium">Land Sovereignty Score</div>
-                            <div class="text-xs text-forest-400">Plot near Hexham, Northumberland</div>
+                            <div class="text-sm text-earth-300 font-medium">Land Sovereignty Score</div>
+                            <div class="text-xs text-earth-400">Plot near Hexham, Northumberland</div>
                         </div>
-                        <span class="text-xs bg-forest-800/50 text-forest-300 px-3 py-1 rounded-full">Live Analysis</span>
+                        <span class="text-xs bg-earth-800/50 text-earth-300 px-3 py-1 rounded-full">Live Analysis</span>
                     </div>
                     
                     <div class="flex items-center justify-center mb-8">
                         <div class="relative w-40 h-40">
                             <div class="score-dial w-full h-full rounded-full flex items-center justify-center" style="--score: 78">
-                                <div class="bg-forest-950 w-32 h-32 rounded-full flex items-center justify-center">
+                                <div class="bg-earth-950 w-32 h-32 rounded-full flex items-center justify-center">
                                     <div class="text-center">
-                                        <span class="text-5xl font-bold text-forest-300 font-serif">78</span>
-                                        <div class="text-xs text-forest-400 mt-1">out of 100</div>
+                                        <span class="text-5xl font-bold text-earth-300 font-serif">78</span>
+                                        <div class="text-xs text-earth-400 mt-1">out of 100</div>
                                     </div>
                                 </div>
                             </div>
@@ -182,60 +182,60 @@
                     <div class="space-y-4">
                         <div class="flex justify-between items-center">
                             <div class="flex items-center">
-                                <span class="text-forest-400 mr-2">📜</span>
-                                <span class="text-sm text-forest-300">Planning Potential</span>
+                                <span class="text-earth-400 mr-2">📜</span>
+                                <span class="text-sm text-earth-300">Planning Potential</span>
                             </div>
                             <div class="flex items-center">
-                                <div class="w-24 h-1.5 bg-forest-900 rounded-full mr-2">
-                                    <div class="h-full bg-forest-500 rounded-full" style="width: 85%"></div>
+                                <div class="w-24 h-1.5 bg-earth-900 rounded-full mr-2">
+                                    <div class="h-full bg-earth-500 rounded-full" style="width: 85%"></div>
                                 </div>
-                                <span class="text-sm font-medium text-forest-300">85%</span>
+                                <span class="text-sm font-medium text-earth-300">85%</span>
                             </div>
                         </div>
                         <div class="flex justify-between items-center">
                             <div class="flex items-center">
-                                <span class="text-forest-400 mr-2">☀️</span>
-                                <span class="text-sm text-forest-300">Solar Viability</span>
+                                <span class="text-earth-400 mr-2">☀️</span>
+                                <span class="text-sm text-earth-300">Solar Viability</span>
                             </div>
                             <div class="flex items-center">
-                                <div class="w-24 h-1.5 bg-forest-900 rounded-full mr-2">
+                                <div class="w-24 h-1.5 bg-earth-900 rounded-full mr-2">
                                     <div class="h-full bg-amber-500 rounded-full" style="width: 72%"></div>
                                 </div>
-                                <span class="text-sm font-medium text-forest-300">72%</span>
+                                <span class="text-sm font-medium text-earth-300">72%</span>
                             </div>
                         </div>
                         <div class="flex justify-between items-center">
                             <div class="flex items-center">
-                                <span class="text-forest-400 mr-2">💧</span>
-                                <span class="text-sm text-forest-300">Water Access</span>
+                                <span class="text-earth-400 mr-2">💧</span>
+                                <span class="text-sm text-earth-300">Water Access</span>
                             </div>
                             <div class="flex items-center">
-                                <div class="w-24 h-1.5 bg-forest-900 rounded-full mr-2">
+                                <div class="w-24 h-1.5 bg-earth-900 rounded-full mr-2">
                                     <div class="h-full bg-sky-500 rounded-full" style="width: 68%"></div>
                                 </div>
-                                <span class="text-sm font-medium text-forest-300">68%</span>
+                                <span class="text-sm font-medium text-earth-300">68%</span>
                             </div>
                         </div>
                         <div class="flex justify-between items-center">
                             <div class="flex items-center">
-                                <span class="text-forest-400 mr-2">🗻</span>
-                                <span class="text-sm text-forest-300">Terrain & Access</span>
+                                <span class="text-earth-400 mr-2">🗻</span>
+                                <span class="text-sm text-earth-300">Terrain & Access</span>
                             </div>
                             <div class="flex items-center">
-                                <div class="w-24 h-1.5 bg-forest-900 rounded-full mr-2">
+                                <div class="w-24 h-1.5 bg-earth-900 rounded-full mr-2">
                                     <div class="h-full bg-earth-500 rounded-full" style="width: 90%"></div>
                                 </div>
-                                <span class="text-sm font-medium text-forest-300">90%</span>
+                                <span class="text-sm font-medium text-earth-300">90%</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-8 pt-6 border-t border-forest-800/30">
+                    <div class="mt-8 pt-6 border-t border-earth-800/30">
                         <div class="flex items-start">
-                            <span class="text-forest-400 mr-2 mt-0.5">💡</span>
+                            <span class="text-earth-400 mr-2 mt-0.5">💡</span>
                             <div>
-                                <div class="text-sm font-medium text-forest-300">Hidden Opportunity Found</div>
-                                <div class="text-xs text-forest-400 mt-1">Previous planning refusal nearby strengthens Para 84 case</div>
+                                <div class="text-sm font-medium text-earth-300">Hidden Opportunity Found</div>
+                                <div class="text-xs text-earth-400 mt-1">Previous planning refusal nearby strengthens Para 84 case</div>
                             </div>
                         </div>
                     </div>
@@ -246,32 +246,32 @@
 </section>
 
 <!-- Real Data Sources -->
-<section class="py-16 border-y border-forest-800/20 bg-forest-950/30">
+<section class="py-16 border-y border-earth-800/20 bg-earth-950/30">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-serif font-bold mb-4">Built on real UK data sources</h2>
-            <p class="text-forest-300 text-lg max-w-2xl mx-auto">We don't guess—we analyze actual data from trusted UK authorities</p>
+            <p class="text-earth-300 text-lg max-w-2xl mx-auto">We don't guess—we analyze actual data from trusted UK authorities</p>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-forest-900/20">
+            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-earth-900/20">
                 <div class="text-2xl mb-3">🏞️</div>
-                <div class="text-xl font-bold text-forest-300 mb-1">Environment Agency</div>
-                <div class="text-sm text-forest-400">Flood risk mapping</div>
+                <div class="text-xl font-bold text-earth-300 mb-1">Environment Agency</div>
+                <div class="text-sm text-earth-400">Flood risk mapping</div>
             </div>
-            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-forest-900/20">
+            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-earth-900/20">
                 <div class="text-2xl mb-3">🗺️</div>
-                <div class="text-xl font-bold text-forest-300 mb-1">Ordnance Survey</div>
-                <div class="text-sm text-forest-400">Terrain & elevation</div>
+                <div class="text-xl font-bold text-earth-300 mb-1">Ordnance Survey</div>
+                <div class="text-sm text-earth-400">Terrain & elevation</div>
             </div>
-            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-forest-900/20">
+            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-earth-900/20">
                 <div class="text-2xl mb-3">💧</div>
-                <div class="text-xl font-bold text-forest-300 mb-1">BGS</div>
-                <div class="text-sm text-forest-400">Groundwater & soil data</div>
+                <div class="text-xl font-bold text-earth-300 mb-1">BGS</div>
+                <div class="text-sm text-earth-400">Groundwater & soil data</div>
             </div>
-            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-forest-900/20">
+            <div class="border-natural rounded-organic p-6 transition-slow hover:bg-earth-900/20">
                 <div class="text-2xl mb-3">📋</div>
-                <div class="text-xl font-bold text-forest-300 mb-1">Local Planning</div>
-                <div class="text-sm text-forest-400">Historical applications</div>
+                <div class="text-xl font-bold text-earth-300 mb-1">Local Planning</div>
+                <div class="text-sm text-earth-400">Historical applications</div>
             </div>
         </div>
     </div>
@@ -281,60 +281,60 @@
 <section id="features" class="py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">What we look for <span class="text-forest-400">in land</span></h2>
-            <p class="text-forest-300 text-lg max-w-2xl mx-auto">The same things you'd look for if you had weeks to research each plot</p>
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">What we look for <span class="text-earth-400">in land</span></h2>
+            <p class="text-earth-300 text-lg max-w-2xl mx-auto">The same things you'd look for if you had weeks to research each plot</p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-forest-950/20">
+            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-earth-950/20">
                 <div class="text-3xl mb-6">🌊</div>
                 <h3 class="text-xl font-serif font-bold mb-3">Will it flood?</h3>
-                <p class="text-forest-300 mb-4">We check Environment Agency flood maps for Zones 2 & 3—because no one wants soggy boots or worse.</p>
-                <div class="text-sm text-forest-400 italic">"Saved us from a beautiful riverside plot that floods every winter." — Sarah, Devon</div>
+                <p class="text-earth-300 mb-4">We check Environment Agency flood maps for Zones 2 & 3—because no one wants soggy boots or worse.</p>
+                <div class="text-sm text-earth-400 italic">"Saved us from a beautiful riverside plot that floods every winter." — Sarah, Devon</div>
             </div>
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-forest-950/20">
+            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-earth-950/20">
                 <div class="text-3xl mb-6">⚡</div>
                 <h3 class="text-xl font-serif font-bold mb-3">True off-grid potential</h3>
-                <p class="text-forest-300 mb-4">Distance to power lines, solar irradiance, wind patterns. We calculate what energy you can realistically generate.</p>
-                <div class="text-sm text-forest-400 italic">"Found a plot with perfect southern exposure we'd have missed." — Tom, Wales</div>
+                <p class="text-earth-300 mb-4">Distance to power lines, solar irradiance, wind patterns. We calculate what energy you can realistically generate.</p>
+                <div class="text-sm text-earth-400 italic">"Found a plot with perfect southern exposure we'd have missed." — Tom, Wales</div>
             </div>
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-forest-950/20">
+            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-earth-950/20">
                 <div class="text-3xl mb-6">📜</div>
                 <h3 class="text-xl font-serif font-bold mb-3">Planning secrets</h3>
-                <p class="text-forest-300 mb-4">Ghost applications, Para 84 opportunities, local policy nuances. The hidden factors that make or break planning.</p>
-                <div class="text-sm text-forest-400 italic">"Uncovered a refused application that became our planning key." — Mike, Yorkshire</div>
+                <p class="text-earth-300 mb-4">Ghost applications, Para 84 opportunities, local policy nuances. The hidden factors that make or break planning.</p>
+                <div class="text-sm text-earth-400 italic">"Uncovered a refused application that became our planning key." — Mike, Yorkshire</div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- How It Works -->
-<section id="how-it-works" class="py-24 bg-forest-950/40">
+<section id="how-it-works" class="py-24 bg-earth-950/40">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">How it <span class="text-forest-400">works</span></h2>
-            <p class="text-forest-300 text-lg">Simple enough for your first plot, powerful enough for your forever home</p>
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">How it <span class="text-earth-400">works</span></h2>
+            <p class="text-earth-300 text-lg">Simple enough for your first plot, powerful enough for your forever home</p>
         </div>
         <div class="grid md:grid-cols-3 gap-12">
             <div class="text-center">
-                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-forest-900/30">
-                    <span class="text-2xl font-bold text-forest-400">1</span>
+                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-earth-900/30">
+                    <span class="text-2xl font-bold text-earth-400">1</span>
                 </div>
                 <h3 class="text-xl font-serif font-bold mb-4">Browse as normal</h3>
-                <p class="text-forest-300">Look at land on Rightmove, OnTheMarket, or any UK property site. Nothing changes in your routine.</p>
+                <p class="text-earth-300">Look at land on Rightmove, OnTheMarket, or any UK property site. Nothing changes in your routine.</p>
             </div>
             <div class="text-center">
-                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-forest-900/30">
-                    <span class="text-2xl font-bold text-forest-400">2</span>
+                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-earth-900/30">
+                    <span class="text-2xl font-bold text-earth-400">2</span>
                 </div>
                 <h3 class="text-xl font-serif font-bold mb-4">Click to scout</h3>
-                <p class="text-forest-300">Our extension analyzes the plot using 7+ data sources. Takes about 30 seconds.</p>
+                <p class="text-earth-300">Our extension analyzes the plot using 7+ data sources. Takes about 30 seconds.</p>
             </div>
             <div class="text-center">
-                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-forest-900/30">
-                    <span class="text-2xl font-bold text-forest-400">3</span>
+                <div class="w-20 h-20 border-natural rounded-organic flex items-center justify-center mx-auto mb-8 transition-slow hover:bg-earth-900/30">
+                    <span class="text-2xl font-bold text-earth-400">3</span>
                 </div>
                 <h3 class="text-xl font-serif font-bold mb-4">Get your dossier</h3>
-                <p class="text-forest-300">Receive a Sovereignty Score with planning analysis, energy potential, water resources, and next steps.</p>
+                <p class="text-earth-300">Receive a Sovereignty Score with planning analysis, energy potential, water resources, and next steps.</p>
             </div>
         </div>
     </div>
@@ -344,121 +344,121 @@
 <section id="pricing" class="py-24">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">Honest <span class="text-forest-400">pricing</span></h2>
-            <p class="text-forest-300 text-lg">Try it free. Pay only when you're ready to scout seriously.</p>
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">Honest <span class="text-earth-400">pricing</span></h2>
+            <p class="text-earth-300 text-lg">Try it free. Pay only when you're ready to scout seriously.</p>
         </div>
         <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <!-- Explorer -->
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-forest-950/20">
-                <div class="text-sm text-forest-400 font-medium uppercase tracking-wider mb-2">Explorer</div>
+            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-earth-950/20">
+                <div class="text-sm text-earth-400 font-medium uppercase tracking-wider mb-2">Explorer</div>
                 <div class="flex items-baseline mb-6">
                     <span class="text-4xl font-bold font-serif">£0</span>
-                    <span class="text-forest-400 ml-2">forever</span>
+                    <span class="text-earth-400 ml-2">forever</span>
                 </div>
                 <ul class="space-y-4 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> 3 land evaluations</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Basic sovereignty score</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Flood risk check</li>
-                    <li class="flex items-center text-sm text-forest-500"><span class="mr-3">—</span> Email reports</li>
-                    <li class="flex items-center text-sm text-forest-500"><span class="mr-3">—</span> Planning deep-dive</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> 3 land evaluations</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Basic sovereignty score</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Flood risk check</li>
+                    <li class="flex items-center text-sm text-earth-500"><span class="mr-3">—</span> Email reports</li>
+                    <li class="flex items-center text-sm text-earth-500"><span class="mr-3">—</span> Planning deep-dive</li>
                 </ul>
-                <a href="#waitlist" class="block w-full border-natural hover:border-forest-500 py-3 rounded-organic font-medium text-center transition-slow">Start Free</a>
+                <a href="#waitlist" class="block w-full border-natural hover:border-earth-500 py-3 rounded-organic font-medium text-center transition-slow">Start Free</a>
             </div>
             <!-- Scout (Most Popular) -->
-            <div class="border-2 border-forest-500 rounded-2xl p-8 relative transition-slow hover-lift bg-forest-950/30">
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-forest-600 text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
-                <div class="text-sm text-forest-300 font-medium uppercase tracking-wider mb-2">Scout</div>
+            <div class="border-2 border-earth-500 rounded-2xl p-8 relative transition-slow hover-lift bg-earth-950/30">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-earth-600 text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
+                <div class="text-sm text-earth-300 font-medium uppercase tracking-wider mb-2">Scout</div>
                 <div class="flex items-baseline mb-6">
                     <span class="text-4xl font-bold font-serif">£9</span>
-                    <span class="text-forest-400 ml-2">/month</span>
+                    <span class="text-earth-400 ml-2">/month</span>
                 </div>
                 <ul class="space-y-4 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> 20 evaluations/month</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Full sovereignty score</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> All data sources</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Email dossier reports</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Ghost application detection</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> 20 evaluations/month</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Full sovereignty score</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> All data sources</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Email dossier reports</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Ghost application detection</li>
                 </ul>
-                <button onclick="checkout('scout')" class="block w-full bg-forest-600 hover:bg-forest-500 py-3 rounded-organic font-bold text-center transition-slow shadow-organic cursor-pointer">Become a Scout</button>
+                <button onclick="checkout('scout')" class="block w-full bg-earth-600 hover:bg-earth-500 py-3 rounded-organic font-bold text-center transition-slow shadow-organic cursor-pointer">Become a Scout</button>
             </div>
             <!-- Pioneer -->
-            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-forest-950/20">
-                <div class="text-sm text-forest-400 font-medium uppercase tracking-wider mb-2">Pioneer</div>
+            <div class="border-natural rounded-2xl p-8 transition-slow hover-lift bg-earth-950/20">
+                <div class="text-sm text-earth-400 font-medium uppercase tracking-wider mb-2">Pioneer</div>
                 <div class="flex items-baseline mb-6">
                     <span class="text-4xl font-bold font-serif">£19</span>
-                    <span class="text-forest-400 ml-2">/month</span>
+                    <span class="text-earth-400 ml-2">/month</span>
                 </div>
                 <ul class="space-y-4 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> <strong>Unlimited</strong> evaluations</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Priority analysis</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Comparative financial estimates</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Direct support access</li>
-                    <li class="flex items-center text-sm"><span class="text-forest-500 mr-3">✓</span> Early feature access</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> <strong>Unlimited</strong> evaluations</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Priority analysis</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Comparative financial estimates</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Direct support access</li>
+                    <li class="flex items-center text-sm"><span class="text-earth-500 mr-3">✓</span> Early feature access</li>
                 </ul>
-                <button onclick="checkout('pioneer')" class="block w-full border-natural hover:border-forest-500 py-3 rounded-organic font-medium text-center transition-slow cursor-pointer">Join Pioneers</button>
+                <button onclick="checkout('pioneer')" class="block w-full border-natural hover:border-earth-500 py-3 rounded-organic font-medium text-center transition-slow cursor-pointer">Join Pioneers</button>
             </div>
         </div>
         <div class="mt-12 max-w-2xl mx-auto text-center">
-            <p class="text-forest-300 text-sm">All plans include our Chrome extension. Cancel anytime. Questions? <a href="mailto:hello@offgridscout.co.uk" class="text-forest-400 underline">hello@offgridscout.co.uk</a></p>
+            <p class="text-earth-300 text-sm">All plans include our Chrome extension. Cancel anytime. Questions? <a href="mailto:hello@offgridscout.co.uk" class="text-earth-400 underline">hello@offgridscout.co.uk</a></p>
         </div>
     </div>
 </section>
 
 <!-- Waitlist/CTA -->
-<section id="waitlist" class="py-24 bg-forest-950/50">
+<section id="waitlist" class="py-24 bg-earth-950/50">
     <div class="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="text-5xl mb-6">🌲</div>
         <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">Start your search today</h2>
-        <p class="text-forest-300 mb-8">Get 3 free evaluations. No credit card required.</p>
+        <p class="text-earth-300 mb-8">Get 3 free evaluations. No credit card required.</p>
         
         <div id="register-form">
             <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
                 <input type="email" id="reg-email" placeholder="your.email@example.com" required
-                    class="flex-1 bg-forest-950/50 border border-forest-700/50 rounded-organic px-5 py-4 text-white placeholder-forest-500 focus:outline-none focus:border-forest-400 focus:ring-1 focus:ring-forest-400 transition-slow">
+                    class="flex-1 bg-earth-950/50 border border-earth-700/50 rounded-organic px-5 py-4 text-white placeholder-earth-500 focus:outline-none focus:border-earth-400 focus:ring-1 focus:ring-earth-400 transition-slow">
                 <button onclick="registerFree()" id="reg-btn"
-                    class="bg-forest-600 hover:bg-forest-500 px-8 py-4 rounded-organic font-bold transition-slow shadow-organic whitespace-nowrap">
+                    class="bg-earth-600 hover:bg-earth-500 px-8 py-4 rounded-organic font-bold transition-slow shadow-organic whitespace-nowrap">
                     Get Free Access
                 </button>
             </div>
             <div id="reg-error" class="hidden mt-3 text-red-300 text-sm"></div>
-            <p class="text-xs text-forest-500 mt-4">We respect your privacy. No spam, ever. <a href="/static/privacy.html" class="underline text-forest-400">Privacy Policy</a></p>
+            <p class="text-xs text-earth-500 mt-4">We respect your privacy. No spam, ever. <a href="/static/privacy.html" class="underline text-earth-400">Privacy Policy</a></p>
         </div>
     </div>
 </section>
 
 <!-- Footer -->
-<footer class="border-t border-forest-800/30 py-12 bg-forest-950/70">
+<footer class="border-t border-earth-800/30 py-12 bg-earth-950/70">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-4 gap-8">
             <div>
                 <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-8 h-8 rounded-organic bg-gradient-to-br from-forest-500 to-forest-700"></div>
-                    <div class="text-lg font-serif font-semibold">Off-Grid <span class="text-forest-400">Scout</span></div>
+                    <div class="w-8 h-8 rounded-organic bg-gradient-to-br from-earth-500 to-earth-700"></div>
+                    <div class="text-lg font-serif font-semibold">Off-Grid <span class="text-earth-400">Scout</span></div>
                 </div>
-                <p class="text-sm text-forest-400">Helping UK land seekers make confident decisions since 2024.</p>
+                <p class="text-sm text-earth-400">Helping UK land seekers make confident decisions since 2024.</p>
             </div>
             <div>
-                <h4 class="font-medium mb-4 text-forest-300">Product</h4>
-                <ul class="space-y-2 text-sm text-forest-400">
-                    <li><a href="#features" class="hover:text-forest-200 transition-slow">Capabilities</a></li>
-                    <li><a href="#how-it-works" class="hover:text-forest-200 transition-slow">How it Works</a></li>
-                    <li><a href="#pricing" class="hover:text-forest-200 transition-slow">Pricing</a></li>
+                <h4 class="font-medium mb-4 text-earth-300">Product</h4>
+                <ul class="space-y-2 text-sm text-earth-400">
+                    <li><a href="#features" class="hover:text-earth-200 transition-slow">Capabilities</a></li>
+                    <li><a href="#how-it-works" class="hover:text-earth-200 transition-slow">How it Works</a></li>
+                    <li><a href="#pricing" class="hover:text-earth-200 transition-slow">Pricing</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-medium mb-4 text-forest-300">Resources</h4>
-                <ul class="space-y-2 text-sm text-forest-400">
-                    <li><a href="/static/privacy.html" class="hover:text-forest-200 transition-slow">Privacy</a></li>
-                    <li><a href="/static/terms.html" class="hover:text-forest-200 transition-slow">Terms</a></li>
-                    <li><a href="mailto:hello@offgridscout.co.uk" class="hover:text-forest-200 transition-slow">Contact</a></li>
+                <h4 class="font-medium mb-4 text-earth-300">Resources</h4>
+                <ul class="space-y-2 text-sm text-earth-400">
+                    <li><a href="/static/privacy.html" class="hover:text-earth-200 transition-slow">Privacy</a></li>
+                    <li><a href="/static/terms.html" class="hover:text-earth-200 transition-slow">Terms</a></li>
+                    <li><a href="mailto:hello@offgridscout.co.uk" class="hover:text-earth-200 transition-slow">Contact</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-medium mb-4 text-forest-300">From the team</h4>
-                <p class="text-sm text-forest-400">We're building this tool because we've been where you are—overwhelmed by land listings and uncertain about suitability. We hope it helps.</p>
+                <h4 class="font-medium mb-4 text-earth-300">From the team</h4>
+                <p class="text-sm text-earth-400">We're building this tool because we've been where you are—overwhelmed by land listings and uncertain about suitability. We hope it helps.</p>
             </div>
         </div>
-        <div class="mt-12 pt-8 border-t border-forest-800/20 text-center text-sm text-forest-500">
+        <div class="mt-12 pt-8 border-t border-earth-800/20 text-center text-sm text-earth-500">
             © 2024 Off-Grid Scout. Made with care in the UK.
         </div>
     </div>
