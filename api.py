@@ -429,3 +429,4 @@ def admin_dashboard(x_admin_key: str = Header(None, alias="X-Admin-Key")):
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+
