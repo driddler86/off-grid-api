@@ -5,14 +5,16 @@ from typing import Optional
 from live_scanner import LiveScanner
 import requests
 import logging
+import asyncio
 import time
 from collections import defaultdict
 from datetime import datetime, timedelta
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
+import os
 
-# --- Issue #7: Simple in-memory rate limiting ---
+# --- Simple in-memory rate limiting ---
 class RateLimitMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, max_requests: int = 10, window_seconds: int = 60):
         super().__init__(app)
@@ -21,7 +23,6 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self.requests = defaultdict(list)
 
     async def dispatch(self, request: Request, call_next):
-        # Skip rate limiting for health checks
         if request.url.path == "/health":
             return await call_next(request)
 
@@ -29,7 +30,6 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         now = datetime.now()
         cutoff = now - timedelta(seconds=self.window_seconds)
 
-        # Clean old entries
         self.requests[client_ip] = [
             t for t in self.requests[client_ip] if t > cutoff
         ]
@@ -44,7 +44,6 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
-# --- Issue #13: Proper logging instead of print() ---
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("off-grid-api")
 
@@ -54,8 +53,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# --- Issue #6: Tightened CORS (configurable for production) ---
-import os
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
@@ -63,16 +60,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-# --- Issue #7: Rate limiting (10 requests per minute per IP) ---
+
 MAX_REQUESTS = int(os.getenv("RATE_LIMIT_MAX", "10"))
 RATE_WINDOW = int(os.getenv("RATE_LIMIT_WINDOW", "60"))
 app.add_middleware(RateLimitMiddleware, max_requests=MAX_REQUESTS, window_seconds=RATE_WINDOW)
 
-# --- Initialize SQLite database ---
-import os
+# --- Admin key — loaded from environment, never falls back to default ---
+ADMIN_KEY = os.getenv("ADMIN_KEY", "")
+
+@app.on_event("startup")
+async def startup_checks():
+    if not ADMIN_KEY:
+        logger.critical(
+            "ADMIN_KEY environment variable is not set. "
+            "Admin endpoints will be disabled until ADMIN_KEY is configured."
+        )
+    else:
+        logger.info("Admin key loaded from environment.")
 
 
-# --- Issue #1 & #5: Updated PropertyData with lat/lon + validation ---
 class PropertyData(BaseModel):
     url: str = Field(..., max_length=2000, description="Listing URL")
     title: str = Field(..., max_length=500, description="Listing title")
@@ -93,7 +99,10 @@ class EmailData(BaseModel):
 
 scanner = LiveScanner()
 
-# --- Issue #1: Geocoding fallback when lat/lon not provided ---
+# Scan timeout in seconds (configurable via env var)
+SCAN_TIMEOUT = int(os.getenv("SCAN_TIMEOUT_SECONDS", "120"))
+
+
 def geocode_from_title(title: str) -> tuple:
     """Use Nominatim to geocode a location from listing title or description."""
     import re
@@ -109,14 +118,13 @@ def geocode_from_title(title: str) -> tuple:
             results = r.json()
             if results:
                 lat, lon = float(results[0]["lat"]), float(results[0]["lon"])
-                # Validate UK bounding box
                 if 49.0 <= lat <= 61.0 and -8.0 <= lon <= 2.0:
                     return lat, lon
         except Exception as e:
             logger.warning(f"Geocoding query failed for '{q}': {e}")
         return None, None
 
-    # 1. Try extracting a UK postcode first — most reliable
+    # 1. Try extracting a UK postcode first
     postcode_match = re.search(
         r'\b([A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2})\b', title, re.IGNORECASE
     )
@@ -124,27 +132,25 @@ def geocode_from_title(title: str) -> tuple:
         lat, lon = _query(postcode_match.group(1))
         if lat: return lat, lon
 
-    # 2. Try "Postcode: XX1 1XX" pattern (added by content script for UKLAF)
+    # 2. Try "Postcode: XX1 1XX" pattern
     postcode_tag = re.search(r'Postcode:\s*([A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2})', title, re.IGNORECASE)
     if postcode_tag:
         lat, lon = _query(postcode_tag.group(1))
         if lat: return lat, lon
 
-    # 3. Extract town/county from title — strip acreage and land type words
+    # 3. Extract town/county from title
     clean = re.sub(
         r'(\d[\d.,]*\s*acres?|for sale|guide price|£[\d,]+|POA|freehold|leasehold'
         r'|development land|agricultural land|pasture|woodland|equestrian'
         r'|smallholding|farm|estate|lot \d+|STP|BNG)',
         '', title, flags=re.IGNORECASE
     )
-    # Remove short tokens and split on commas to get location fragments
     parts = [p.strip() for p in clean.split(',') if len(p.strip()) > 3]
-    # Try each part from the end (most specific location usually at end)
     for part in reversed(parts):
         lat, lon = _query(part + ", UK")
         if lat: return lat, lon
 
-    # 4. Last resort — try the full title
+    # 4. Last resort — full title
     lat, lon = _query(title)
     if lat: return lat, lon
 
@@ -153,26 +159,19 @@ def geocode_from_title(title: str) -> tuple:
 
 @app.get("/health")
 def health_check():
-    """Health check endpoint for Render."""
     return {"status": "healthy", "service": "off-grid-scout-api"}
 
 
-# --- Issue #1, #2: Fixed /scan with dynamic coords + error handling ---
 @app.post("/scan")
-def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
+async def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
     try:
-        # Check API key if provided (free scans allowed without key for demo)
         user_tier = "free"
         if x_api_key:
             limit_info = check_rate_limit(x_api_key)
             if not limit_info["allowed"]:
-                raise HTTPException(
-                    status_code=429,
-                    detail=limit_info["reason"]
-                )
+                raise HTTPException(status_code=429, detail=limit_info["reason"])
             user_tier = limit_info.get("tier", "free")
 
-        # Issue #1: Use provided coordinates or geocode from title
         lat, lon = data.lat, data.lon
 
         if lat is None or lon is None:
@@ -185,7 +184,6 @@ def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, al
                 detail="Could not determine location. Please provide lat/lon coordinates or a more specific title with a UK location name."
             )
 
-        # Validate UK coordinates (rough bounding box)
         if not (49.0 <= lat <= 61.0 and -8.0 <= lon <= 2.0):
             raise HTTPException(
                 status_code=400,
@@ -195,9 +193,19 @@ def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, al
         desc = data.description or data.title
         logger.info(f"Scanning property at ({lat}, {lon}): {data.title}")
 
-        dossier = scanner.generate_dossier(data.title, "TBD", lat, lon, desc)
+        # Run the scanner in a thread with a timeout to prevent indefinite hangs
+        try:
+            dossier = await asyncio.wait_for(
+                asyncio.to_thread(scanner.generate_dossier, data.title, "TBD", lat, lon, desc),
+                timeout=SCAN_TIMEOUT
+            )
+        except asyncio.TimeoutError:
+            logger.error(f"Scan timed out after {SCAN_TIMEOUT}s for ({lat}, {lon})")
+            raise HTTPException(
+                status_code=504,
+                detail=f"Scan timed out after {SCAN_TIMEOUT} seconds. The external data APIs may be slow — please try again."
+            )
 
-        # Record scan usage if API key provided
         if x_api_key:
             record_scan(x_api_key)
             features = TIER_FEATURES.get(user_tier, TIER_FEATURES["free"])
@@ -205,7 +213,7 @@ def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, al
             features = TIER_FEATURES["free"]
 
         import re
-        score_match = re.search(r'(?:FINAL OFF GRID SCORE|Sovereignty Score|Overall Score)[:\s]+(\d{1,3})', dossier, re.IGNORECASE)
+        score_match = re.search(r'(?:FINAL OFF GRID SCORE|Sovereignty Score|Overall Score)[\:\s]+(\d{1,3})', dossier, re.IGNORECASE)
         score = int(score_match.group(1)) if score_match else None
 
         return {
@@ -217,16 +225,12 @@ def scan_property(data: PropertyData, x_api_key: Optional[str] = Header(None, al
         }
 
     except HTTPException:
-        raise  # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
         logger.error(f"Scan failed: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal error during property scan: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Internal error during property scan: {str(e)}")
 
 
-# --- Issue #3: Real email placeholder with SMTP support ---
 @app.post("/email")
 def send_email(data: EmailData):
     try:
@@ -241,16 +245,13 @@ def send_email(data: EmailData):
         from_email = os.getenv("FROM_EMAIL", smtp_user)
 
         if not all([smtp_host, smtp_user, smtp_pass]):
-            # Fallback to simulation if SMTP not configured
             logger.warning("SMTP not configured - simulating email send")
-            logger.info(f"[EMAIL SERVICE] Would send dossier to {data.email}")
             return {
                 "status": "success",
                 "message": f"Report queued for {data.email} (SMTP not configured - demo mode)",
                 "demo_mode": True
             }
 
-        # Real SMTP send
         msg = MIMEMultipart()
         msg["From"] = from_email
         msg["To"] = data.email
@@ -267,14 +268,10 @@ def send_email(data: EmailData):
 
     except Exception as e:
         logger.error(f"Email failed: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to send email: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
 
-# --- Stripe payment endpoints ---
+
 from stripe_integration import create_checkout_session, handle_webhook
-from fastapi import Request
 
 class CheckoutData(BaseModel):
     plan: str = Field(..., pattern="^(scout|pioneer|lifetime)$")
@@ -297,24 +294,18 @@ async def stripe_webhook(request: Request):
     sig = request.headers.get("stripe-signature", "")
     try:
         result = handle_webhook(payload, sig)
-        # Auto-create/upgrade user account on successful payment
         if result.get("event_type") == "checkout.session.completed":
             email = result.get("customer_email")
             plan = result.get("plan", "scout")
             stripe_id = result.get("customer_id")
             if email:
-                user_result = create_user(
-                    email=email,
-                    stripe_customer_id=stripe_id,
-                    tier=plan,
-                )
+                create_user(email=email, stripe_customer_id=stripe_id, tier=plan)
                 logger.info(f"User account created/upgraded: {email} -> {plan}")
         return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-# --- Auth endpoints ---
 class RegisterData(BaseModel):
     email: str = Field(..., max_length=320)
 
@@ -327,7 +318,6 @@ class RegisterData(BaseModel):
 
 @app.post("/auth/register")
 def register_user(data: RegisterData):
-    """Register for a free account and get an API key."""
     try:
         result = create_user(email=data.email, tier="free")
         return {
@@ -335,7 +325,7 @@ def register_user(data: RegisterData):
             "api_key": result["api_key"],
             "tier": result["tier"],
             "message": "Save your API key - it won't be shown again!"
-                       + (" (Existing account - new key issued)" if result["existing"] else ""),
+                + (" (Existing account - new key issued)" if result["existing"] else ""),
         }
     except Exception as e:
         logger.error(f"Registration failed: {e}")
@@ -344,7 +334,6 @@ def register_user(data: RegisterData):
 
 @app.get("/auth/verify")
 def verify_key(x_api_key: str = Header(..., alias="X-API-Key")):
-    """Verify an API key and return account info."""
     stats = get_user_stats(x_api_key)
     if not stats:
         raise HTTPException(status_code=401, detail="Invalid API key")
@@ -353,14 +342,13 @@ def verify_key(x_api_key: str = Header(..., alias="X-API-Key")):
 
 @app.get("/auth/session")
 def get_session(session_id: str):
-    """Resolve a Stripe checkout session_id to the user's API key.
-    Called by success.html after payment to display the key to the user.
-    """
     import stripe
     from stripe_integration import PRICE_IDS
+
     stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
     if not stripe.api_key:
         raise HTTPException(status_code=503, detail="Payment system not configured")
+
     try:
         session = stripe.checkout.Session.retrieve(session_id)
     except Exception as e:
@@ -372,28 +360,23 @@ def get_session(session_id: str):
     if not customer_email:
         raise HTTPException(status_code=400, detail="No email associated with this session")
 
-    # Create or update the user at the paid tier — issues a fresh key
     result = create_user(email=customer_email, tier=plan)
     return {"api_key": result["api_key"], "tier": plan, "email": customer_email}
 
 
 @app.get("/auth/usage")
 def get_usage(x_api_key: str = Header(..., alias="X-API-Key")):
-    """Get current usage stats for rate limit display."""
     limit_check = check_rate_limit(x_api_key)
     if not limit_check["allowed"] and limit_check["remaining"] == 0 and limit_check["limit"] == 0:
         raise HTTPException(status_code=401, detail="Invalid API key")
     return limit_check
 
-# --- Waitlist endpoint ---
-# --- Database (replaces auth.py and waitlist.py) ---
+
 from db import (
     init_db, save_to_waitlist, get_waitlist_count,
     create_user, validate_api_key, check_rate_limit,
     record_scan, get_user_stats, TIER_FEATURES
 )
-from fastapi import Header
-
 
 class WaitlistData(BaseModel):
     email: str = Field(..., max_length=320)
@@ -408,7 +391,7 @@ def join_waitlist(data: WaitlistData):
         logger.error(f"Waitlist error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# --- Serve landing page ---
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
@@ -417,28 +400,30 @@ def serve_landing():
     return FileResponse("static/index.html")
 
 
-# --- Admin Dashboard ---
-ADMIN_KEY = os.getenv("ADMIN_KEY", "change-me-in-production")
-
+# --- Admin endpoints — disabled if ADMIN_KEY not configured ---
 @app.get("/admin")
 def serve_admin():
+    if not ADMIN_KEY:
+        raise HTTPException(status_code=503, detail="Admin panel is not configured on this server.")
     return FileResponse("static/admin.html")
 
 @app.get("/admin/dashboard")
 def admin_dashboard(x_admin_key: str = Header(None, alias="X-Admin-Key")):
+    if not ADMIN_KEY:
+        raise HTTPException(status_code=503, detail="Admin panel is not configured on this server.")
     if not x_admin_key or x_admin_key != ADMIN_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
     from db import _query
-    users      = _query("SELECT COUNT(*) as n FROM users WHERE active=1")
-    waitlist   = _query("SELECT COUNT(*) as n FROM waitlist")
-    scans      = _query("SELECT SUM(scans_total) as n FROM users")
-    paid       = _query("SELECT COUNT(*) as n FROM users WHERE tier != 'free' AND active=1")
+    users   = _query("SELECT COUNT(*) as n FROM users WHERE active=1")
+    waitlist = _query("SELECT COUNT(*) as n FROM waitlist")
+    scans   = _query("SELECT SUM(scans_total) as n FROM users")
+    paid    = _query("SELECT COUNT(*) as n FROM users WHERE tier != 'free' AND active=1")
     return {
         "stats": {
-            "total_users":    users[0]["n"]    if users    else 0,
+            "total_users":   users[0]["n"]    if users    else 0,
             "waitlist_count": waitlist[0]["n"] if waitlist else 0,
-            "total_scans":    scans[0]["n"]    if scans    else 0,
-            "paid_users":     paid[0]["n"]     if paid     else 0,
+            "total_scans":   scans[0]["n"]    if scans    else 0,
+            "paid_users":    paid[0]["n"]     if paid     else 0,
         }
     }
 
