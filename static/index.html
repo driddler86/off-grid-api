@@ -14,7 +14,7 @@
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         brand: { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d' },
-                        dark: { 800:'#1a1a2e', 900:'#0f0f1a' }
+                        dark: { 700:'#222240', 800:'#1a1a2e', 900:'#0f0f1a' }
                     }
                 }
             }
@@ -22,82 +22,199 @@
     </script>
     <style>
         .gradient-bg{background:linear-gradient(135deg,#0f0f1a 0%,#1a1a2e 50%,#162416 100%)}
-        .glow{box-shadow:0 0 40px rgba(34,197,94,0.15)}
-        .glow-text{text-shadow:0 0 30px rgba(34,197,94,0.3)}
-        .card-hover{transition:all .3s ease}
-        .card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+        .glow{box-shadow:0 0 60px rgba(34,197,94,0.12),0 0 120px rgba(34,197,94,0.06)}
+        .glow-text{text-shadow:0 0 40px rgba(34,197,94,0.4)}
+        .card-hover{transition:all .4s cubic-bezier(.25,.8,.25,1)}
+        .card-hover:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,0.4),0 0 30px rgba(34,197,94,0.08)}
         .pulse-dot{animation:pulse 2s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-        .fade-in{animation:fadeIn .8s ease-out}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        .hero-pattern{background-image:radial-gradient(circle at 20% 50%,rgba(34,197,94,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(34,197,94,0.05) 0%,transparent 50%)}
-        .score-ring{background:conic-gradient(#22c55e 0deg,#22c55e 270deg,#333 270deg,#333 360deg)}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .hero-pattern{background-image:radial-gradient(circle at 20% 50%,rgba(34,197,94,0.1) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(34,197,94,0.06) 0%,transparent 50%),radial-gradient(circle at 60% 80%,rgba(34,197,94,0.04) 0%,transparent 40%)}
         html{scroll-behavior:smooth}
+
+        /* Animated score ring */
+        .score-ring-animated{
+            background:conic-gradient(#22c55e 0deg,#4ade80 calc(var(--score-angle,0) * 1deg),#333 calc(var(--score-angle,0) * 1deg),#333 360deg);
+            transition:--score-angle 1.5s cubic-bezier(.4,0,.2,1);
+        }
+        @property --score-angle{syntax:'<number>';initial-value:0;inherits:false}
+
+        /* Scroll reveal */
+        .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.25,.8,.25,1),transform .7s cubic-bezier(.25,.8,.25,1)}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+        .reveal-delay-1{transition-delay:.1s}
+        .reveal-delay-2{transition-delay:.2s}
+        .reveal-delay-3{transition-delay:.3s}
+        .reveal-delay-4{transition-delay:.4s}
+        .reveal-delay-5{transition-delay:.5s}
+
+        /* Gradient border cards */
+        .gradient-border{position:relative;background:rgba(255,255,255,0.03);overflow:hidden}
+        .gradient-border::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(34,197,94,0.3),rgba(255,255,255,0.08),rgba(34,197,94,0.15));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+
+        /* Shimmer button */
+        .btn-shimmer{position:relative;overflow:hidden}
+        .btn-shimmer::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);transition:left .5s ease}
+        .btn-shimmer:hover::after{left:100%}
+
+        /* Floating particles */
+        .particle{position:absolute;border-radius:50%;pointer-events:none;animation:float linear infinite}
+        @keyframes float{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100vh) scale(0);opacity:0}}
+
+        /* Gradient text */
+        .gradient-heading{background:linear-gradient(135deg,#fff 0%,#86efac 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+        /* Timeline connector */
+        .timeline-connector{position:relative}
+        .timeline-connector::after{content:'';position:absolute;top:50%;left:calc(50% + 40px);width:calc(100% - 80px);height:2px;background:linear-gradient(90deg,rgba(34,197,94,0.4),rgba(34,197,94,0.1));display:none}
+        @media(min-width:768px){.timeline-connector::after{display:block}}
+
+        /* Stat counter */
+        .stat-glow{text-shadow:0 0 20px rgba(34,197,94,0.5)}
+
+        /* Glass card */
+        .glass{background:rgba(255,255,255,0.04);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08)}
+
+        /* Nav blur */
+        .nav-blur{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+
+        /* Mobile menu */
+        .mobile-menu-enter{animation:slideDown .3s ease-out}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+        /* Badge glow */
+        .badge-glow{box-shadow:0 0 12px rgba(34,197,94,0.25)}
+
+        /* Pricing card popular */
+        .pricing-popular{box-shadow:0 0 40px rgba(34,197,94,0.1),0 8px 32px rgba(0,0,0,0.3)}
+
+        /* Feature icon bg */
+        .feature-icon{background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05));border:1px solid rgba(34,197,94,0.15)}
     </style>
 </head>
-<body class="gradient-bg text-white font-sans antialiased">
+<body class="gradient-bg text-white font-sans antialiased overflow-x-hidden">
+
+<!-- Floating Particles Background -->
+<div id="particles" class="fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
 
 <!-- Navigation -->
-<nav class="fixed top-0 w-full z-50 bg-dark-900/80 backdrop-blur-xl border-b border-white/5">
+<nav class="fixed top-0 w-full z-50 nav-blur bg-dark-900/70 border-b border-white/5 transition-shadow duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-            <div class="flex items-center space-x-2">
-                <span class="text-2xl">&#x1f3d5;&#xfe0f;</span>
+            <a href="#" class="flex items-center space-x-2 group">
+                <span class="text-2xl transition-transform group-hover:scale-110">&#x1f3d5;&#xfe0f;</span>
                 <span class="text-xl font-bold">Off-Grid <span class="text-brand-400">Scout</span></span>
-            </div>
+            </a>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
-                <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How It Works</a>
-                <a href="#pricing" class="text-gray-300 hover:text-white transition">Pricing</a>
-                <a href="#faq" class="text-gray-300 hover:text-white transition">FAQ</a>
-                <a href="#waitlist" class="bg-brand-600 hover:bg-brand-500 px-5 py-2 rounded-lg font-semibold transition">Get Early Access</a>
+                <a href="#features" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm font-medium">Features</a>
+                <a href="#how-it-works" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm font-medium">How It Works</a>
+                <a href="#pricing" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm font-medium">Pricing</a>
+                <a href="#faq" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm font-medium">FAQ</a>
+                <a href="#waitlist" class="btn-shimmer bg-brand-600 hover:bg-brand-500 px-5 py-2.5 rounded-lg font-semibold text-sm transition-colors duration-200">Get Early Access</a>
+            </div>
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/10 transition" aria-label="Menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden pb-4 mobile-menu-enter">
+            <div class="flex flex-col space-y-3 pt-2">
+                <a href="#features" class="text-gray-400 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">Features</a>
+                <a href="#how-it-works" class="text-gray-400 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">How It Works</a>
+                <a href="#pricing" class="text-gray-400 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">Pricing</a>
+                <a href="#faq" class="text-gray-400 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">FAQ</a>
+                <a href="#waitlist" class="bg-brand-600 hover:bg-brand-500 px-5 py-3 rounded-lg font-semibold text-center transition">Get Early Access</a>
             </div>
         </div>
     </div>
 </nav>
 
 <!-- Hero Section -->
-<section class="hero-pattern min-h-screen flex items-center pt-16">
+<section class="hero-pattern min-h-screen flex items-center pt-16 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-            <div class="fade-in">
-                <div class="inline-flex items-center bg-brand-900/30 border border-brand-700/30 rounded-full px-4 py-1.5 mb-6">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <div class="reveal inline-flex items-center bg-brand-900/40 border border-brand-700/30 rounded-full px-4 py-1.5 mb-8 badge-glow">
                     <span class="pulse-dot w-2 h-2 bg-brand-400 rounded-full mr-2"></span>
                     <span class="text-brand-300 text-sm font-medium">Now in Early Access</span>
                 </div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6">
-                    Find Your Perfect<span class="text-brand-400 glow-text"> Off-Grid</span> Land in Seconds
+                <h1 class="reveal reveal-delay-1 text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] mb-8 tracking-tight">
+                    Find Your Perfect<br><span class="text-brand-400 glow-text">Off-Grid</span> Land in Seconds
                 </h1>
-                <p class="text-xl text-gray-400 mb-8 max-w-lg">
+                <p class="reveal reveal-delay-2 text-lg sm:text-xl text-gray-400 mb-10 max-w-lg leading-relaxed">
                     AI-powered Chrome extension that instantly evaluates UK land plots for off-grid living. Flood risk, energy potential, water sources, planning policy — all analyzed while you browse.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 mb-12">
-                    <a href="#waitlist" class="bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold text-lg text-center transition shadow-lg shadow-brand-600/25">&#x1f680; Get Early Access</a>
-                    <a href="#how-it-works" class="border border-white/20 hover:border-white/40 px-8 py-4 rounded-xl font-semibold text-lg text-center transition">See How It Works</a>
+                <div class="reveal reveal-delay-3 flex flex-col sm:flex-row gap-4 mb-12">
+                    <a href="#waitlist" class="btn-shimmer bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold text-lg text-center transition-all duration-300 shadow-lg shadow-brand-600/25 hover:shadow-brand-500/35 hover:scale-[1.02]">&#x1f680; Get Early Access</a>
+                    <a href="#how-it-works" class="border border-white/15 hover:border-white/30 hover:bg-white/5 px-8 py-4 rounded-xl font-semibold text-lg text-center transition-all duration-300">See How It Works</a>
                 </div>
-                <div class="flex items-center space-x-6 text-sm text-gray-500">
-                    <div>&#x2713; Free trial included</div>
-                    <div>&#x2713; No card required</div>
-                    <div>&#x2713; Cancel anytime</div>
+                <div class="reveal reveal-delay-4 flex items-center space-x-6 text-sm text-gray-500">
+                    <div class="flex items-center"><svg class="w-4 h-4 text-brand-500 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Free trial included</div>
+                    <div class="flex items-center"><svg class="w-4 h-4 text-brand-500 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>No card required</div>
+                    <div class="flex items-center"><svg class="w-4 h-4 text-brand-500 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Cancel anytime</div>
                 </div>
             </div>
             <!-- Score Mockup -->
-            <div class="fade-in flex justify-center">
-                <div class="bg-dark-800/60 backdrop-blur border border-white/10 rounded-2xl p-8 glow max-w-md w-full">
-                    <div class="flex items-center justify-between mb-6">
-                        <span class="text-sm text-gray-400">Sovereignty Score</span>
-                        <span class="text-xs bg-brand-900/50 text-brand-300 px-2 py-1 rounded-full">&#x26a1; Live</span>
+            <div class="reveal reveal-delay-2 flex justify-center lg:justify-end">
+                <div class="glass rounded-3xl p-8 glow max-w-sm w-full relative">
+                    <div class="absolute -top-3 -right-3 w-20 h-20 bg-brand-500/10 rounded-full blur-2xl"></div>
+                    <div class="flex items-center justify-between mb-8">
+                        <span class="text-sm text-gray-400 font-medium">Sovereignty Score</span>
+                        <span class="text-xs bg-brand-500/20 text-brand-300 px-3 py-1 rounded-full font-semibold flex items-center"><span class="w-1.5 h-1.5 bg-brand-400 rounded-full mr-1.5 pulse-dot"></span>Live</span>
                     </div>
-                    <div class="flex items-center justify-center mb-6">
-                        <div class="relative w-32 h-32"><div class="score-ring w-full h-full rounded-full flex items-center justify-center"><div class="bg-dark-900 w-24 h-24 rounded-full flex items-center justify-center"><span class="text-4xl font-black text-brand-400">78</span></div></div></div>
+                    <div class="flex items-center justify-center mb-8">
+                        <div class="relative w-36 h-36">
+                            <div class="score-ring-animated w-full h-full rounded-full flex items-center justify-center" id="score-ring">
+                                <div class="bg-dark-900 w-[6.5rem] h-[6.5rem] rounded-full flex items-center justify-center shadow-inner">
+                                    <span class="text-5xl font-black text-brand-400" id="score-number">0</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f4dc; Planning</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-brand-400 rounded-full" style="width:85%"></div></div><span class="text-sm font-semibold">85%</span></div></div>
-                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x2600;&#xfe0f; Energy</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-yellow-400 rounded-full" style="width:72%"></div></div><span class="text-sm font-semibold">72%</span></div></div>
-                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f4a7; Water</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-blue-400 rounded-full" style="width:68%"></div></div><span class="text-sm font-semibold">68%</span></div></div>
-                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400">&#x1f6e3;&#xfe0f; Terrain</span><div class="flex items-center"><div class="w-24 h-2 bg-gray-700 rounded-full mr-2"><div class="h-full bg-orange-400 rounded-full" style="width:90%"></div></div><span class="text-sm font-semibold">90%</span></div></div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center group">
+                            <span class="text-sm text-gray-400 flex items-center"><span class="mr-2 text-base">&#x1f4dc;</span>Planning</span>
+                            <div class="flex items-center">
+                                <div class="w-28 h-2.5 bg-white/5 rounded-full mr-3 overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-brand-500 to-brand-400 rounded-full transition-all duration-1000 ease-out score-bar" data-width="85" style="width:0%"></div>
+                                </div>
+                                <span class="text-sm font-bold w-8 text-right">85%</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center group">
+                            <span class="text-sm text-gray-400 flex items-center"><span class="mr-2 text-base">&#x2600;&#xfe0f;</span>Energy</span>
+                            <div class="flex items-center">
+                                <div class="w-28 h-2.5 bg-white/5 rounded-full mr-3 overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-1000 ease-out score-bar" data-width="72" style="width:0%"></div>
+                                </div>
+                                <span class="text-sm font-bold w-8 text-right">72%</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center group">
+                            <span class="text-sm text-gray-400 flex items-center"><span class="mr-2 text-base">&#x1f4a7;</span>Water</span>
+                            <div class="flex items-center">
+                                <div class="w-28 h-2.5 bg-white/5 rounded-full mr-3 overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full transition-all duration-1000 ease-out score-bar" data-width="68" style="width:0%"></div>
+                                </div>
+                                <span class="text-sm font-bold w-8 text-right">68%</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center group">
+                            <span class="text-sm text-gray-400 flex items-center"><span class="mr-2 text-base">&#x1f6e3;&#xfe0f;</span>Terrain</span>
+                            <div class="flex items-center">
+                                <div class="w-28 h-2.5 bg-white/5 rounded-full mr-3 overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-orange-500 to-orange-400 rounded-full transition-all duration-1000 ease-out score-bar" data-width="90" style="width:0%"></div>
+                                </div>
+                                <span class="text-sm font-bold w-8 text-right">90%</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-6 pt-4 border-t border-white/10"><div class="flex items-center text-brand-300"><span class="mr-2">&#x1f47b;</span><span class="text-sm font-semibold">Ghost Application Found — Para 84 Candidate!</span></div></div>
+                    <div class="mt-6 pt-5 border-t border-white/10">
+                        <div class="flex items-center text-brand-300 bg-brand-500/10 rounded-xl px-4 py-3">
+                            <span class="mr-2 text-lg">&#x1f47b;</span>
+                            <span class="text-sm font-semibold">Ghost Application Found — Para 84 Candidate!</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,269 +222,301 @@
 </section>
 
 <!-- Stats Bar -->
-<section class="border-y border-white/5 bg-dark-900/50">
-    <div class="max-w-7xl mx-auto px-4 py-8">
+<section class="border-y border-white/5 bg-dark-900/60 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 py-10 sm:py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div><div class="text-3xl font-black text-brand-400">7+</div><div class="text-sm text-gray-400 mt-1">UK Data Sources</div></div>
-            <div><div class="text-3xl font-black text-brand-400">30s</div><div class="text-sm text-gray-400 mt-1">Average Scan Time</div></div>
-            <div><div class="text-3xl font-black text-brand-400">&pound;000s</div><div class="text-sm text-gray-400 mt-1">Saved in Research</div></div>
-            <div><div class="text-3xl font-black text-brand-400">Para 84</div><div class="text-sm text-gray-400 mt-1">Ghost App Detection</div></div>
+            <div class="reveal">
+                <div class="text-3xl sm:text-4xl font-black text-brand-400 stat-glow stat-counter" data-target="7" data-suffix="+">0</div>
+                <div class="text-sm text-gray-500 mt-2 font-medium">UK Data Sources</div>
+            </div>
+            <div class="reveal reveal-delay-1">
+                <div class="text-3xl sm:text-4xl font-black text-brand-400 stat-glow stat-counter" data-target="30" data-suffix="s">0</div>
+                <div class="text-sm text-gray-500 mt-2 font-medium">Average Scan Time</div>
+            </div>
+            <div class="reveal reveal-delay-2">
+                <div class="text-3xl sm:text-4xl font-black text-brand-400 stat-glow">&pound;000s</div>
+                <div class="text-sm text-gray-500 mt-2 font-medium">Saved in Research</div>
+            </div>
+            <div class="reveal reveal-delay-3">
+                <div class="text-3xl sm:text-4xl font-black text-brand-400 stat-glow">Para 84</div>
+                <div class="text-sm text-gray-500 mt-2 font-medium">Ghost App Detection</div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Features Section -->
-<section id="features" class="py-24">
+<section id="features" class="py-24 sm:py-32 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-black mb-4">Everything You Need to <span class="text-brand-400">Scout Smart</span></h2>
+        <div class="text-center mb-20 reveal">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-5">Everything You Need to <span class="text-brand-400 glow-text">Scout Smart</span></h2>
             <p class="text-gray-400 text-lg max-w-2xl mx-auto">7+ UK data sources analyzed automatically while you browse property listings</p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div class="text-3xl mb-4">&#x1f30a;</div>
-                <h3 class="text-lg font-bold mb-2">Flood Risk Analysis</h3>
-                <p class="text-gray-400 text-sm">Real-time checks against the UK Environment Agency flood map. Instantly flags Zone 2 and Zone 3 risks.</p>
+            <div class="reveal card-hover gradient-border rounded-2xl p-7">
+                <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                    <span class="text-2xl">&#x1f30a;</span>
+                </div>
+                <h3 class="text-lg font-bold mb-3">Flood Risk Analysis</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Real-time checks against the UK Environment Agency flood map. Instantly flags Zone 2 and Zone 3 risks.</p>
             </div>
-            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div class="text-3xl mb-4">&#x26a1;</div>
-                <h3 class="text-lg font-bold mb-2">Grid Distance Check</h3>
-                <p class="text-gray-400 text-sm">Uses OpenStreetMap to calculate proximity to the nearest power line. True off-grid scoring.</p>
+            <div class="reveal reveal-delay-1 card-hover gradient-border rounded-2xl p-7">
+                <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                    <span class="text-2xl">&#x26a1;</span>
+                </div>
+                <h3 class="text-lg font-bold mb-3">Grid Distance Check</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Uses OpenStreetMap to calculate proximity to the nearest power line. True off-grid scoring.</p>
             </div>
-            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div class="text-3xl mb-4">&#x2600;&#xfe0f;</div>
-                <h3 class="text-lg font-bold mb-2">Solar &amp; Wind Potential</h3>
-                <p class="text-gray-400 text-sm">NASA POWER satellite data for solar irradiance and wind speed. Terrain-adjusted for slope and aspect.</p>
+            <div class="reveal reveal-delay-2 card-hover gradient-border rounded-2xl p-7">
+                <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                    <span class="text-2xl">&#x2600;&#xfe0f;</span>
+                </div>
+                <h3 class="text-lg font-bold mb-3">Solar &amp; Wind Potential</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">NASA POWER satellite data for solar irradiance and wind speed. Terrain-adjusted for slope and aspect.</p>
             </div>
-            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div class="text-3xl mb-4">&#x1f4a7;</div>
-                <h3 class="text-lg font-bold mb-2">Water &amp; Soil Resources</h3>
-                <p class="text-gray-400 text-sm">British Geological Survey data on aquifer productivity and soil type. Know your borehole potential.</p>
+            <div class="reveal reveal-delay-1 card-hover gradient-border rounded-2xl p-7">
+                <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                    <span class="text-2xl">&#x1f4a7;</span>
+                </div>
+                <h3 class="text-lg font-bold mb-3">Water &amp; Soil Resources</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">British Geological Survey data on aquifer productivity and soil type. Know your borehole potential.</p>
             </div>
-            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div class="text-3xl mb-4">&#x1f47b;</div>
-                <h3 class="text-lg font-bold mb-2">Ghost App Detection</h3>
-                <p class="text-gray-400 text-sm">Finds refused planning applications nearby — the secret key to Paragraph 84 development rights.</p>
+            <div class="reveal reveal-delay-2 card-hover gradient-border rounded-2xl p-7">
+                <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                    <span class="text-2xl">&#x1f47b;</span>
+                </div>
+                <h3 class="text-lg font-bold mb-3">Ghost App Detection</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Finds refused planning applications nearby — the secret key to Paragraph 84 development rights.</p>
             </div>
-            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div class="text-3xl mb-4">&#x1f3d4;&#xfe0f;</div>
-                <h3 class="text-lg font-bold mb-2">Terrain &amp; Access</h3>
-                <p class="text-gray-400 text-sm">Elevation, slope, aspect analysis plus road access within 150m. South-facing land gets a boost.</p>
+            <div class="reveal reveal-delay-3 card-hover gradient-border rounded-2xl p-7">
+                <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                    <span class="text-2xl">&#x1f3d4;&#xfe0f;</span>
+                </div>
+                <h3 class="text-lg font-bold mb-3">Terrain &amp; Access</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Elevation, slope, aspect analysis plus road access within 150m. South-facing land gets a boost.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- How It Works -->
-<section id="how-it-works" class="py-24 bg-dark-900/50">
+<section id="how-it-works" class="py-24 sm:py-32 bg-dark-900/50 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-black mb-4">How It <span class="text-brand-400">Works</span></h2>
+        <div class="text-center mb-20 reveal">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-5">How It <span class="text-brand-400 glow-text">Works</span></h2>
             <p class="text-gray-400 text-lg">Three simple steps to evaluate any UK land plot</p>
         </div>
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="text-center">
-                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <span class="text-2xl font-black text-brand-400">1</span>
+        <div class="grid md:grid-cols-3 gap-8 relative">
+            <!-- Connector line (desktop) -->
+            <div class="hidden md:block absolute top-10 left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px bg-gradient-to-r from-brand-500/40 via-brand-500/20 to-brand-500/40"></div>
+            <div class="reveal text-center relative">
+                <div class="w-20 h-20 bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-brand-600/20 relative z-10">
+                    <span class="text-2xl font-black">1</span>
                 </div>
                 <h3 class="text-xl font-bold mb-3">Browse Listings</h3>
-                <p class="text-gray-400">Visit any UK land listing on Rightmove, OnTheMarket, or other property sites as you normally would.</p>
+                <p class="text-gray-400 leading-relaxed">Visit any UK land listing on Rightmove, OnTheMarket, or other property sites as you normally would.</p>
             </div>
-            <div class="text-center">
-                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <span class="text-2xl font-black text-brand-400">2</span>
+            <div class="reveal reveal-delay-1 text-center relative">
+                <div class="w-20 h-20 bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-brand-600/20 relative z-10">
+                    <span class="text-2xl font-black">2</span>
                 </div>
                 <h3 class="text-xl font-bold mb-3">Click Scout</h3>
-                <p class="text-gray-400">Hit the Off-Grid Scout extension icon. Our AI analyses 7+ data sources in under 30 seconds.</p>
+                <p class="text-gray-400 leading-relaxed">Hit the Off-Grid Scout extension icon. Our AI analyses 7+ data sources in under 30 seconds.</p>
             </div>
-            <div class="text-center">
-                <div class="w-16 h-16 bg-brand-600/20 border border-brand-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <span class="text-2xl font-black text-brand-400">3</span>
+            <div class="reveal reveal-delay-2 text-center relative">
+                <div class="w-20 h-20 bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-brand-600/20 relative z-10">
+                    <span class="text-2xl font-black">3</span>
                 </div>
                 <h3 class="text-xl font-bold mb-3">Get Your Dossier</h3>
-                <p class="text-gray-400">Receive a full Sovereignty Score with planning analysis, energy potential, water resources, and CapEx estimates.</p>
+                <p class="text-gray-400 leading-relaxed">Receive a full Sovereignty Score with planning analysis, energy potential, water resources, and CapEx estimates.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Pricing Section -->
-<section id="pricing" class="py-24">
+<section id="pricing" class="py-24 sm:py-32 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-black mb-4">Simple, Honest <span class="text-brand-400">Pricing</span></h2>
+        <div class="text-center mb-20 reveal">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-5">Simple, Honest <span class="text-brand-400 glow-text">Pricing</span></h2>
             <p class="text-gray-400 text-lg">Start free. Upgrade when you're ready.</p>
         </div>
-        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto items-start">
             <!-- Free Tier -->
-            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-8">
-                <div class="text-sm text-gray-400 font-semibold uppercase tracking-wider mb-2">Free Trial</div>
-                <div class="flex items-baseline mb-6">
-                    <span class="text-4xl font-black">&pound;0</span>
-                    <span class="text-gray-400 ml-2">forever</span>
+            <div class="reveal card-hover glass rounded-2xl p-8">
+                <div class="text-sm text-gray-500 font-semibold uppercase tracking-wider mb-3">Free Trial</div>
+                <div class="flex items-baseline mb-8">
+                    <span class="text-5xl font-black">&pound;0</span>
+                    <span class="text-gray-500 ml-2 font-medium">forever</span>
                 </div>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> 3 property scans</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Basic Sovereignty Score</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Flood risk check</li>
-                    <li class="flex items-center text-sm text-gray-500"><span class="mr-2">&#x2717;</span> Email reports</li>
-                    <li class="flex items-center text-sm text-gray-500"><span class="mr-2">&#x2717;</span> Ghost App detection</li>
+                <ul class="space-y-4 mb-10">
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>3 property scans</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Basic Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Flood risk check</li>
+                    <li class="flex items-center text-sm text-gray-600"><svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>Email reports</li>
+                    <li class="flex items-center text-sm text-gray-600"><svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>Ghost App detection</li>
                 </ul>
-                <a href="#waitlist" class="block w-full border border-white/20 hover:border-white/40 py-3 rounded-xl font-semibold text-center transition">Start Free</a>
+                <a href="#waitlist" class="block w-full border border-white/15 hover:border-white/30 hover:bg-white/5 py-3.5 rounded-xl font-semibold text-center transition-all duration-300">Start Free</a>
             </div>
             <!-- Scout Tier -->
-            <div class="card-hover bg-brand-900/20 border-2 border-brand-500/50 rounded-2xl p-8 relative">
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-600 text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
-                <div class="text-sm text-brand-300 font-semibold uppercase tracking-wider mb-2">Scout</div>
-                <div class="flex items-baseline mb-6">
-                    <span class="text-4xl font-black">&pound;9.99</span>
-                    <span class="text-gray-400 ml-2">/month</span>
+            <div class="reveal reveal-delay-1 card-hover rounded-2xl p-8 relative pricing-popular bg-gradient-to-b from-brand-900/30 to-dark-800/80 border-2 border-brand-500/40 md:-mt-4 md:pb-12">
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-brand-600 to-brand-500 text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-lg shadow-brand-600/30">MOST POPULAR</div>
+                <div class="text-sm text-brand-300 font-semibold uppercase tracking-wider mb-3">Scout</div>
+                <div class="flex items-baseline mb-8">
+                    <span class="text-5xl font-black">&pound;9.99</span>
+                    <span class="text-gray-400 ml-2 font-medium">/month</span>
                 </div>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> 20 scans per month</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Full Sovereignty Score</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> All 7+ data sources</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Email dossier reports</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Ghost App detection</li>
+                <ul class="space-y-4 mb-10">
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>20 scans per month</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Full Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All 7+ data sources</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Email dossier reports</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Ghost App detection</li>
                 </ul>
-                <a href="#waitlist" class="block w-full bg-brand-600 hover:bg-brand-500 py-3 rounded-xl font-bold text-center transition shadow-lg shadow-brand-600/25">Get Scout</a>
+                <a href="#waitlist" class="btn-shimmer block w-full bg-brand-600 hover:bg-brand-500 py-3.5 rounded-xl font-bold text-center transition-all duration-300 shadow-lg shadow-brand-600/25">Get Scout</a>
             </div>
             <!-- Pioneer Tier -->
-            <div class="card-hover bg-white/5 border border-white/10 rounded-2xl p-8">
-                <div class="text-sm text-gray-400 font-semibold uppercase tracking-wider mb-2">Pioneer</div>
-                <div class="flex items-baseline mb-6">
-                    <span class="text-4xl font-black">&pound;19.99</span>
-                    <span class="text-gray-400 ml-2">/month</span>
+            <div class="reveal reveal-delay-2 card-hover glass rounded-2xl p-8">
+                <div class="text-sm text-gray-500 font-semibold uppercase tracking-wider mb-3">Pioneer</div>
+                <div class="flex items-baseline mb-8">
+                    <span class="text-5xl font-black">&pound;19.99</span>
+                    <span class="text-gray-400 ml-2 font-medium">/month</span>
                 </div>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> <strong>Unlimited</strong> scans</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Full Sovereignty Score</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> All 7+ data sources</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> Priority API access</li>
-                    <li class="flex items-center text-sm"><span class="text-brand-400 mr-2">&#x2713;</span> CapEx financial comparison</li>
+                <ul class="space-y-4 mb-10">
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><strong>Unlimited</strong>&nbsp;scans</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Full Sovereignty Score</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All 7+ data sources</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Priority API access</li>
+                    <li class="flex items-center text-sm"><svg class="w-5 h-5 text-brand-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>CapEx financial comparison</li>
                 </ul>
-                <a href="#waitlist" class="block w-full border border-white/20 hover:border-white/40 py-3 rounded-xl font-semibold text-center transition">Get Pioneer</a>
+                <a href="#waitlist" class="block w-full border border-white/15 hover:border-white/30 hover:bg-white/5 py-3.5 rounded-xl font-semibold text-center transition-all duration-300">Get Pioneer</a>
             </div>
         </div>
         <!-- Lifetime Deal Banner -->
-        <div class="mt-12 max-w-3xl mx-auto bg-gradient-to-r from-brand-900/40 to-brand-800/20 border border-brand-600/30 rounded-2xl p-8 text-center">
-            <div class="text-2xl mb-2">&#x1f525;</div>
-            <h3 class="text-xl font-bold mb-2">Founding Member Lifetime Deal</h3>
-            <p class="text-gray-400 mb-4">First 100 users get <strong class="text-brand-400">&pound;99 one-time</strong> for unlimited everything. Forever.</p>
-            <a href="#waitlist" class="inline-block bg-brand-600 hover:bg-brand-500 px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-brand-600/25">Claim Your Spot</a>
+        <div class="reveal mt-16 max-w-3xl mx-auto relative overflow-hidden rounded-2xl">
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-900/50 to-brand-800/30"></div>
+            <div class="absolute inset-0 border border-brand-500/20 rounded-2xl"></div>
+            <div class="relative p-10 text-center">
+                <div class="text-3xl mb-3">&#x1f525;</div>
+                <h3 class="text-2xl font-bold mb-3">Founding Member Lifetime Deal</h3>
+                <p class="text-gray-400 mb-6 text-lg">First 100 users get <strong class="text-brand-400">&pound;99 one-time</strong> for unlimited everything. Forever.</p>
+                <a href="#waitlist" class="btn-shimmer inline-block bg-brand-600 hover:bg-brand-500 px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg shadow-brand-600/25 hover:shadow-brand-500/35 hover:scale-[1.02]">Claim Your Spot</a>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- FAQ Section -->
-<section id="faq" class="py-24 bg-dark-900/50">
+<section id="faq" class="py-24 sm:py-32 bg-dark-900/50 relative z-10">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-black mb-4">Frequently Asked <span class="text-brand-400">Questions</span></h2>
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-4">Frequently Asked <span class="text-brand-400 glow-text">Questions</span></h2>
         </div>
-        <div class="space-y-4">
-            <details class="group bg-white/5 border border-white/10 rounded-xl">
-                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+        <div class="space-y-3">
+            <details class="reveal group glass rounded-xl transition-all duration-300 hover:border-white/15">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold select-none">
                     What property sites does it work with?
-                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                    <svg class="w-5 h-5 text-brand-400 transition-transform duration-300 group-open:rotate-45 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </summary>
-                <div class="px-6 pb-6 text-gray-400">Off-Grid Scout works with any UK property listing website including Rightmove, OnTheMarket, Zoopla, LandForSale.co.uk, and more. Simply browse a listing and click the extension icon.</div>
+                <div class="px-6 pb-6 text-gray-400 leading-relaxed">Off-Grid Scout works with any UK property listing website including Rightmove, OnTheMarket, Zoopla, LandForSale.co.uk, and more. Simply browse a listing and click the extension icon.</div>
             </details>
-            <details class="group bg-white/5 border border-white/10 rounded-xl">
-                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+            <details class="reveal reveal-delay-1 group glass rounded-xl transition-all duration-300 hover:border-white/15">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold select-none">
                     What is a "Sovereignty Score"?
-                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                    <svg class="w-5 h-5 text-brand-400 transition-transform duration-300 group-open:rotate-45 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </summary>
-                <div class="px-6 pb-6 text-gray-400">The Sovereignty Score (0-100) is our proprietary rating that combines planning policy analysis (40%), energy potential (30%), and water/resource availability (30%). Higher scores mean better off-grid potential. Scores above 70 are considered excellent candidates.</div>
+                <div class="px-6 pb-6 text-gray-400 leading-relaxed">The Sovereignty Score (0-100) is our proprietary rating that combines planning policy analysis (40%), energy potential (30%), and water/resource availability (30%). Higher scores mean better off-grid potential. Scores above 70 are considered excellent candidates.</div>
             </details>
-            <details class="group bg-white/5 border border-white/10 rounded-xl">
-                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+            <details class="reveal reveal-delay-2 group glass rounded-xl transition-all duration-300 hover:border-white/15">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold select-none">
                     What is a "Ghost Application"?
-                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                    <svg class="w-5 h-5 text-brand-400 transition-transform duration-300 group-open:rotate-45 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </summary>
-                <div class="px-6 pb-6 text-gray-400">A Ghost Application is a previously refused residential planning application near your target plot. Under Paragraph 84 of the NPPF, these refused applications can actually strengthen your case for alternative rural development. Our AI detects these automatically &mdash; a feature no other tool offers.</div>
+                <div class="px-6 pb-6 text-gray-400 leading-relaxed">A Ghost Application is a previously refused residential planning application near your target plot. Under Paragraph 84 of the NPPF, these refused applications can actually strengthen your case for alternative rural development. Our AI detects these automatically &mdash; a feature no other tool offers.</div>
             </details>
-            <details class="group bg-white/5 border border-white/10 rounded-xl">
-                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+            <details class="reveal reveal-delay-3 group glass rounded-xl transition-all duration-300 hover:border-white/15">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold select-none">
                     How accurate is the data?
-                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                    <svg class="w-5 h-5 text-brand-400 transition-transform duration-300 group-open:rotate-45 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </summary>
-                <div class="px-6 pb-6 text-gray-400">We pull from official UK government and scientific sources: Environment Agency (flood), NASA POWER (energy), British Geological Survey (water/soil), OpenStreetMap (infrastructure), and PlanIt (planning history). The data is as accurate as the source agencies provide. We always recommend professional surveys before purchase.</div>
+                <div class="px-6 pb-6 text-gray-400 leading-relaxed">We pull from official UK government and scientific sources: Environment Agency (flood), NASA POWER (energy), British Geological Survey (water/soil), OpenStreetMap (infrastructure), and PlanIt (planning history). The data is as accurate as the source agencies provide. We always recommend professional surveys before purchase.</div>
             </details>
-            <details class="group bg-white/5 border border-white/10 rounded-xl">
-                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+            <details class="reveal reveal-delay-4 group glass rounded-xl transition-all duration-300 hover:border-white/15">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold select-none">
                     Does it work outside the UK?
-                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                    <svg class="w-5 h-5 text-brand-400 transition-transform duration-300 group-open:rotate-45 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </summary>
-                <div class="px-6 pb-6 text-gray-400">Currently Off-Grid Scout is UK-only, as it relies on UK-specific data sources (Environment Agency, BGS, UK planning system). We're exploring expansion to other countries in the future.</div>
+                <div class="px-6 pb-6 text-gray-400 leading-relaxed">Currently Off-Grid Scout is UK-only, as it relies on UK-specific data sources (Environment Agency, BGS, UK planning system). We're exploring expansion to other countries in the future.</div>
             </details>
-            <details class="group bg-white/5 border border-white/10 rounded-xl">
-                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold">
+            <details class="reveal reveal-delay-5 group glass rounded-xl transition-all duration-300 hover:border-white/15">
+                <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold select-none">
                     Can I cancel my subscription?
-                    <span class="text-brand-400 group-open:rotate-45 transition-transform text-xl">+</span>
+                    <svg class="w-5 h-5 text-brand-400 transition-transform duration-300 group-open:rotate-45 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </summary>
-                <div class="px-6 pb-6 text-gray-400">Yes, cancel anytime with one click from your dashboard. No lock-in contracts, no cancellation fees. Your access continues until the end of your billing period.</div>
+                <div class="px-6 pb-6 text-gray-400 leading-relaxed">Yes, cancel anytime with one click from your dashboard. No lock-in contracts, no cancellation fees. Your access continues until the end of your billing period.</div>
             </details>
         </div>
     </div>
 </section>
 
 <!-- Waitlist / CTA Section -->
-<section id="waitlist" class="py-24">
+<section id="waitlist" class="py-24 sm:py-32 relative z-10">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="text-4xl mb-4">&#x1f3d5;&#xfe0f;</div>
-        <h2 class="text-3xl sm:text-4xl font-black mb-4">Ready to Scout <span class="text-brand-400">Smarter</span>?</h2>
-        <p class="text-gray-400 text-lg mb-8">Join the early access list. Be first to get the extension when it launches. Founding members get the lifetime deal.</p>
-        <form id="waitlist-form" class="max-w-md mx-auto">
+        <div class="reveal">
+            <div class="text-5xl mb-6">&#x1f3d5;&#xfe0f;</div>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-5">Ready to Scout <span class="text-brand-400 glow-text">Smarter</span>?</h2>
+            <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">Join the early access list. Be first to get the extension when it launches. Founding members get the lifetime deal.</p>
+        </div>
+        <form id="waitlist-form" class="reveal reveal-delay-1 max-w-md mx-auto">
             <div class="flex flex-col sm:flex-row gap-3">
-                <input type="email" id="email-input" placeholder="your@email.com" required class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition">
-                <button type="submit" class="bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-brand-600/25 whitespace-nowrap">Join Waitlist</button>
+                <input type="email" id="email-input" placeholder="your@email.com" required class="flex-1 glass rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/30 transition-all duration-300">
+                <button type="submit" class="btn-shimmer bg-brand-600 hover:bg-brand-500 px-8 py-4 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-brand-600/25 hover:shadow-brand-500/35 whitespace-nowrap">Join Waitlist</button>
             </div>
-            <p class="text-xs text-gray-500 mt-3">No spam. Unsubscribe anytime. We respect your privacy.</p>
+            <p class="text-xs text-gray-600 mt-4">No spam. Unsubscribe anytime. We respect your privacy.</p>
         </form>
-        <div id="waitlist-success" class="hidden mt-6 bg-brand-900/30 border border-brand-600/30 rounded-xl p-6">
-            <span class="text-2xl">&#x1f389;</span>
-            <p class="text-brand-300 font-semibold mt-2">You're on the list! We'll notify you when Off-Grid Scout launches.</p>
+        <div id="waitlist-success" class="hidden mt-8 bg-brand-900/30 border border-brand-600/30 rounded-xl p-8">
+            <span class="text-3xl">&#x1f389;</span>
+            <p class="text-brand-300 font-semibold mt-3 text-lg">You're on the list! We'll notify you when Off-Grid Scout launches.</p>
         </div>
     </div>
 </section>
 
 <!-- Footer -->
-<footer class="border-t border-white/5 py-12 bg-dark-900/80">
+<footer class="border-t border-white/5 py-16 bg-dark-900/80 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid md:grid-cols-4 gap-8">
+        <div class="grid md:grid-cols-4 gap-12">
             <div>
-                <div class="flex items-center space-x-2 mb-4">
-                    <span class="text-xl">&#x1f3d5;&#xfe0f;</span>
+                <a href="#" class="flex items-center space-x-2 mb-4 group">
+                    <span class="text-xl transition-transform group-hover:scale-110">&#x1f3d5;&#xfe0f;</span>
                     <span class="text-lg font-bold">Off-Grid <span class="text-brand-400">Scout</span></span>
-                </div>
-                <p class="text-sm text-gray-500">AI-powered land evaluation for off-grid living in the UK.</p>
+                </a>
+                <p class="text-sm text-gray-500 leading-relaxed">AI-powered land evaluation for off-grid living in the UK.</p>
             </div>
             <div>
-                <h4 class="font-semibold mb-4">Product</h4>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="#features" class="hover:text-white transition">Features</a></li>
-                    <li><a href="#pricing" class="hover:text-white transition">Pricing</a></li>
-                    <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                <h4 class="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Product</h4>
+                <ul class="space-y-3 text-sm text-gray-500">
+                    <li><a href="#features" class="hover:text-white transition-colors duration-200">Features</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition-colors duration-200">Pricing</a></li>
+                    <li><a href="#faq" class="hover:text-white transition-colors duration-200">FAQ</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-semibold mb-4">Legal</h4>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                <h4 class="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Legal</h4>
+                <ul class="space-y-3 text-sm text-gray-500">
+                    <li><a href="/privacy.html" class="hover:text-white transition-colors duration-200">Privacy Policy</a></li>
+                    <li><a href="/terms.html" class="hover:text-white transition-colors duration-200">Terms of Service</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-semibold mb-4">Connect</h4>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="https://github.com/driddler86" class="hover:text-white transition">GitHub</a></li>
-                    <li><a href="mailto:hello@offgridscout.com" class="hover:text-white transition">Contact</a></li>
+                <h4 class="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Connect</h4>
+                <ul class="space-y-3 text-sm text-gray-500">
+                    <li><a href="https://github.com/driddler86" class="hover:text-white transition-colors duration-200">GitHub</a></li>
+                    <li><a href="mailto:hello@offgridscout.com" class="hover:text-white transition-colors duration-200">Contact</a></li>
                 </ul>
             </div>
         </div>
-        <div class="mt-12 pt-8 border-t border-white/5 text-center text-sm text-gray-500">
-            &copy; 2025 Off-Grid Scout. All rights reserved.
+        <div class="mt-16 pt-8 border-t border-white/5 text-center text-sm text-gray-600">
+            &copy; 2026 Off-Grid Scout. All rights reserved.
         </div>
     </div>
 </footer>
@@ -377,9 +526,17 @@
     // Mobile menu toggle
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
+    const menuIconPath = document.getElementById('menu-icon-path');
     if (btn && menu) {
-        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
-        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
+        btn.addEventListener('click', () => {
+            const isOpen = !menu.classList.contains('hidden');
+            menu.classList.toggle('hidden');
+            menuIconPath.setAttribute('d', isOpen ? 'M4 6h16M4 12h16M4 18h16' : 'M6 18L18 6M6 6l12 12');
+        });
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+            menu.classList.add('hidden');
+            menuIconPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        }));
     }
 
     // Waitlist form
@@ -389,7 +546,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email-input').value;
-            // Call the waitlist API
             fetch('/waitlist', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})}).then(r=>r.json()).then(d=>console.log('Waitlist:',d)).catch(e=>console.error(e));
             form.classList.add('hidden');
             success.classList.remove('hidden');
@@ -400,11 +556,101 @@
     window.addEventListener('scroll', () => {
         const nav = document.querySelector('nav');
         if (window.scrollY > 50) {
-            nav.classList.add('shadow-xl');
+            nav.classList.add('shadow-2xl', 'bg-dark-900/90');
+            nav.classList.remove('bg-dark-900/70');
         } else {
-            nav.classList.remove('shadow-xl');
+            nav.classList.remove('shadow-2xl', 'bg-dark-900/90');
+            nav.classList.add('bg-dark-900/70');
         }
     });
+
+    // Scroll reveal with Intersection Observer
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // Animated score ring & counter
+    const scoreRing = document.getElementById('score-ring');
+    const scoreNumber = document.getElementById('score-number');
+    const scoreBars = document.querySelectorAll('.score-bar');
+    let scoreAnimated = false;
+    const scoreObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !scoreAnimated) {
+                scoreAnimated = true;
+                // Animate score ring
+                scoreRing.style.setProperty('--score-angle', '281');
+                // Animate score number
+                let current = 0;
+                const target = 78;
+                const duration = 1500;
+                const step = duration / target;
+                const counter = setInterval(() => {
+                    current++;
+                    scoreNumber.textContent = current;
+                    if (current >= target) clearInterval(counter);
+                }, step);
+                // Animate bars
+                setTimeout(() => {
+                    scoreBars.forEach(bar => {
+                        bar.style.width = bar.dataset.width + '%';
+                    });
+                }, 200);
+            }
+        });
+    }, { threshold: 0.3 });
+    if (scoreRing) scoreObserver.observe(scoreRing);
+
+    // Stat counters
+    const statCounters = document.querySelectorAll('.stat-counter');
+    const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.dataset.target);
+                const suffix = el.dataset.suffix || '';
+                let current = 0;
+                const duration = 1200;
+                const step = duration / target;
+                const counter = setInterval(() => {
+                    current++;
+                    el.textContent = current + suffix;
+                    if (current >= target) clearInterval(counter);
+                }, step);
+                statObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+    statCounters.forEach(el => statObserver.observe(el));
+
+    // Floating particles
+    function createParticles() {
+        const container = document.getElementById('particles');
+        if (!container) return;
+        const colors = ['rgba(34,197,94,0.15)', 'rgba(34,197,94,0.08)', 'rgba(74,222,128,0.1)'];
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 3 + 1;
+            particle.style.cssText = `
+                width:${size}px;height:${size}px;
+                background:${colors[Math.floor(Math.random() * colors.length)]};
+                left:${Math.random() * 100}%;
+                bottom:-10px;
+                animation-duration:${Math.random() * 15 + 10}s;
+                animation-delay:${Math.random() * 10}s;
+            `;
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
 </script>
 
 </body>
